@@ -5,8 +5,7 @@ namespace Boot
 {
     public class BootManager : MonoBehaviour
     {
-        [SerializeField]
-        private string nextSceneName = "TitleScene"; // 遷移先のシーン名
+        private readonly string nextSceneName = "SelectionScene"; // 遷移先のシーン名
 
         private void Awake()
         {
@@ -23,7 +22,7 @@ namespace Boot
 
         private void LoadNextScene()
         {
-            // SceneManager.LoadScene(nextSceneName);
+            SceneManager.LoadScene(nextSceneName);
         }
     }
 }
