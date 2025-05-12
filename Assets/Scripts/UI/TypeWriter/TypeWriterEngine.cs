@@ -42,6 +42,12 @@ namespace UI.TypeWriter
             }
         }
 
+        public void ShowFullText()
+        {
+            target.Text = fullText;
+            currentIndex = fullText.Length;
+        }
+
         public bool IsFinished => currentIndex >= fullText.Length;
     }
 }

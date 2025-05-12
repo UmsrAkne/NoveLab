@@ -49,5 +49,35 @@ namespace Tests.EditMode.UI.TypeWriter
             Assert.AreEqual("Hey", dummy.Text);
             Assert.IsTrue(engine.IsFinished);
         }
+
+        [TestCase("SetOnly", Description = "After SetText")]
+        [TestCase("OneUpdate", Description = "After one Update")]
+        [TestCase("Finished", Description = "After full display")]
+        public void ShowFullText_RevealsAllText(string setupCase)
+        {
+            var dummy = new DummyTextTarget();
+            var engine = new TypewriterEngine(dummy);
+            engine.SetText("Hello");
+
+            switch (setupCase)
+            {
+                case "OneUpdate":
+                    engine.Update(0.05f);
+                    break;
+                case "Finished":
+                    while (!engine.IsFinished)
+                    {
+                        engine.Update(0.05f);
+                    }
+                    break;
+                case "SetOnly":
+                    break;
+            }
+
+            engine.ShowFullText();
+
+            Assert.AreEqual("Hello", dummy.Text);
+            Assert.IsTrue(engine.IsFinished);
+        }
     }
 }
