@@ -36,7 +36,9 @@ namespace UI.Adapters
 
         public void SetScale(float scale)
         {
-            image.rectTransform.localScale = new Vector3(scale, scale, 1);
+            var rt = image.rectTransform;
+            var originalSize = image.sprite.rect.size;
+            rt.sizeDelta = originalSize * scale;
         }
     }
 }
