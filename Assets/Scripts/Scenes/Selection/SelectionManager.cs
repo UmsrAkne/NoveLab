@@ -1,9 +1,10 @@
 using System.IO;
+using System.Linq;
 using Loaders;
 using UI.Adapters;
+using UI.Controllers;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Scenes.Selection
 {
@@ -16,7 +17,9 @@ namespace Scenes.Selection
         private Transform thumbnailContainer;
 
         [SerializeField]
-        private Sprite newSprite;
+        private ImageSelector imageSelector;
+
+        private int selectedIndex;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
@@ -26,10 +29,17 @@ namespace Scenes.Selection
             #endif
         }
 
-        // Update is called once per frame
-        // private void Update()
-        // {
-        // }
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                imageSelector.MoveSelection(+1);
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                imageSelector.MoveSelection(-1);
+            }
+        }
 
         private void AddImage(Texture2D texture)
         {
@@ -37,6 +47,8 @@ namespace Scenes.Selection
             var adapter = imageGameObject.GetComponent<SpriteAdapter>();
             adapter.SetTexture(texture);
             adapter.SetScale(0.15f);
+            adapter.SetAlpha(0.5f);
+            imageSelector.DisplayImages.Add(adapter);
         }
 
         private void LoadDebugImages()
@@ -55,6 +67,8 @@ namespace Scenes.Selection
                 var texture = ImageLoader.LoadTexture(imagePath, false);
                 AddImage(texture);
             }
+
+            imageSelector.DisplayImages.First()?.SetAlpha(1);
         }
     }
 }

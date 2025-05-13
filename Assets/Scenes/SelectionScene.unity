@@ -582,6 +582,7 @@ GameObject:
   m_Component:
   - component: {fileID: 967734377}
   - component: {fileID: 967734376}
+  - component: {fileID: 967734378}
   m_Layer: 0
   m_Name: SelectionManagerContainer
   m_TagString: Untagged
@@ -603,7 +604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imagePrefab: {fileID: 4647494849625919140, guid: 5a61ddb6798d2f54191c761e685a1659, type: 3}
   thumbnailContainer: {fileID: 1199527427}
-  newSprite: {fileID: 0}
+  imageSelector: {fileID: 967734378}
 --- !u!4 &967734377
 Transform:
   m_ObjectHideFlags: 0
@@ -619,6 +620,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &967734378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 967734375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3f279a792be6b4289aad00a641faa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollRect: {fileID: 579162065}
 --- !u!1 &1199527426
 GameObject:
   m_ObjectHideFlags: 0
