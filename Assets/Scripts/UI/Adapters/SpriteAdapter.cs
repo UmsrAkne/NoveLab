@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace UI.Adapters
 {
-    public class UnityImageAdapter : MonoBehaviour, IDisplayImage
+    public class SpriteAdapter : MonoBehaviour, IDisplayImage
     {
         [SerializeField]
         private Image image;
