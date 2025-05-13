@@ -14,6 +14,8 @@ namespace UI.Controllers
 
         public List<IDisplayImage> DisplayImages { get; set; } = new ();
 
+        public IDisplayImage SelectedItem => DisplayImages[selectedIndex];
+
         public void MoveSelection(int direction)
         {
             var newIndex = selectedIndex + direction;

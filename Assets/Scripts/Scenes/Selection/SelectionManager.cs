@@ -19,6 +19,9 @@ namespace Scenes.Selection
         [SerializeField]
         private ImageSelector imageSelector;
 
+        [SerializeField]
+        private GameObject backgroundImage;
+
         private int selectedIndex;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -34,10 +37,12 @@ namespace Scenes.Selection
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 imageSelector.MoveSelection(+1);
+                SetBackground();
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 imageSelector.MoveSelection(-1);
+                SetBackground();
             }
         }
 
@@ -69,6 +74,19 @@ namespace Scenes.Selection
             }
 
             imageSelector.DisplayImages.First()?.SetAlpha(1);
+        }
+
+        private void SetBackground()
+        {
+            var d = imageSelector.SelectedItem;
+            var adapter = d as SpriteAdapter;
+            if (adapter == null)
+            {
+                return;
+            }
+
+            var component = backgroundImage.GetComponent<SpriteAdapter>();
+            component.SetTexture(adapter.GetTexture());
         }
     }
 }

@@ -9,6 +9,8 @@ namespace UI.Adapters
         [SerializeField]
         private Image image;
 
+        private Texture2D texture2D;
+
         public void SetTexture(Texture2D texture)
         {
             if (image == null)
@@ -20,6 +22,12 @@ namespace UI.Adapters
             var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
             image.sprite = sprite;
             image.SetNativeSize();
+            texture2D = texture;
+        }
+
+        public Texture2D GetTexture()
+        {
+            return texture2D;
         }
 
         public void SetAlpha(float alpha)
