@@ -6,7 +6,16 @@ namespace Loaders
 {
     public static class ImageLoader
     {
-        public static Texture2D LoadTexture(string filePath)
+        /// <summary>
+        /// Loads an image file and returns it as a Texture2D.
+        /// You can choose to keep or remove the alpha (transparency) channel.
+        /// </summary>
+        /// <param name="filePath">The path to the image file.</param>
+        /// <param name="keepAlpha">
+        /// If true, keeps the alpha channel. If false, removes it to save memory.
+        /// </param>
+        /// <returns>The loaded Texture2D, or null if loading fails.</returns>
+        public static Texture2D LoadTexture(string filePath, bool keepAlpha = true)
         {
             if (!File.Exists(filePath))
             {
@@ -15,7 +24,12 @@ namespace Loaders
             }
 
             var imageData = File.ReadAllBytes(filePath);
-            var texture = new Texture2D(2, 2); // サイズは適当、後でロード時に上書きされる
+
+            // サイズは適当、後でロード時に上書きされる
+            var texture = keepAlpha
+                ? new Texture2D(2, 2)
+                : new Texture2D(2, 2, TextureFormat.RGB24, false);
+
             if (texture.LoadImage(imageData)) // 読み込み成功したら
             {
                 return texture;
