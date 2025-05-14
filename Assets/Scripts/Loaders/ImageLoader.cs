@@ -28,10 +28,14 @@ namespace Loaders
             // サイズは適当、後でロード時に上書きされる
             var texture = keepAlpha
                 ? new Texture2D(2, 2)
-                : new Texture2D(2, 2, TextureFormat.RGB24, false);
+                : new Texture2D(2, 2, TextureFormat.RGB24, true);
 
             if (texture.LoadImage(imageData)) // 読み込み成功したら
             {
+                // 高品質で設定
+                texture.filterMode = FilterMode.Trilinear;           // 滑らか補間（or Trilinear）
+                texture.wrapMode = TextureWrapMode.Clamp;           // UIなら繰り返し不要
+                texture.anisoLevel = 1;                             // UI用途なら基本1でOK（斜め表示多いなら2以上）
                 return texture;
             }
 
