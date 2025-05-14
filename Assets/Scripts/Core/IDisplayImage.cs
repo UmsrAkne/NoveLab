@@ -9,5 +9,7 @@ namespace Core
         public void SetPosition(Vector2 anchoredPosition);
 
         public void SetScale(float scale);
+
+        public void SetTexture(Texture2D texture);
     }
 }
