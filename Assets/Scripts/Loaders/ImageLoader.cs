@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Loaders
@@ -15,7 +16,7 @@ namespace Loaders
         /// If true, keeps the alpha channel. If false, removes it to save memory.
         /// </param>
         /// <returns>The loaded Texture2D, or null if loading fails.</returns>
-        public static Texture2D LoadTexture(string filePath, bool keepAlpha = true)
+        public static async Task<Texture2D> LoadTexture(string filePath, bool keepAlpha = true)
         {
             if (!File.Exists(filePath))
             {
@@ -23,7 +24,7 @@ namespace Loaders
                 return null;
             }
 
-            var imageData = File.ReadAllBytes(filePath);
+            var imageData = await File.ReadAllBytesAsync(filePath);
 
             // サイズは適当、後でロード時に上書きされる
             var texture = keepAlpha

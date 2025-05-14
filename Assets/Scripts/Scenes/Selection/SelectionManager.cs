@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using Loaders;
@@ -56,7 +57,7 @@ namespace Scenes.Selection
             imageSelector.DisplayImages.Add(adapter);
         }
 
-        private void LoadDebugImages()
+        private async void LoadDebugImages()
         {
             if (EditorApplication.isPlaying && !Application.isEditor)
             {
@@ -69,7 +70,7 @@ namespace Scenes.Selection
             var imagePaths = Directory.GetFiles(@"C:\Users\Public\testData\images");
             foreach (var imagePath in imagePaths)
             {
-                var texture = ImageLoader.LoadTexture(imagePath, false);
+                var texture = await ImageLoader.LoadTexture(imagePath, false);
                 AddImage(texture);
             }
 
