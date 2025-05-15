@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using Loaders;
@@ -56,7 +57,7 @@ namespace Scenes.Selection
             imageSelector.DisplayImages.Add(adapter);
         }
 
-        private void LoadDebugImages()
+        private async void LoadDebugImages()
         {
             if (EditorApplication.isPlaying && !Application.isEditor)
             {
@@ -66,10 +67,10 @@ namespace Scenes.Selection
 
             Debug.Log("This runs ONLY in the editor during Play mode!");
 
-            var imagePaths = Directory.GetFiles(@"C:\Users\Public\testData\images");
+            var imagePaths = GetThumbnailPaths(true);
             foreach (var imagePath in imagePaths)
             {
-                var texture = ImageLoader.LoadTexture(imagePath, false);
+                var texture = await ImageLoader.LoadTexture(imagePath, false);
                 AddImage(texture);
             }
 
@@ -87,6 +88,11 @@ namespace Scenes.Selection
 
             var component = backgroundImage.GetComponent<SpriteAdapter>();
             component.SetTexture(adapter.GetTexture());
+        }
+
+        private string[] GetThumbnailPaths(bool debugMode)
+        {
+            return debugMode ? Directory.GetFiles(@"C:\Users\Public\testData\images") : Array.Empty<string>();
         }
     }
 }
