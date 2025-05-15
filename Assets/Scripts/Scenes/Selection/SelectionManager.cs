@@ -15,6 +15,9 @@ namespace Scenes.Selection
         private GameObject imagePrefab;
 
         [SerializeField]
+        private GameObject spriteAdapterPrefab;
+
+        [SerializeField]
         private Transform thumbnailContainer;
 
         [SerializeField]
@@ -22,6 +25,9 @@ namespace Scenes.Selection
 
         [SerializeField]
         private GameObject backgroundImage;
+
+        [SerializeField]
+        private ImageStacker imageStacker;
 
         private int selectedIndex;
 
@@ -86,8 +92,10 @@ namespace Scenes.Selection
                 return;
             }
 
-            var component = backgroundImage.GetComponent<SpriteAdapter>();
-            component.SetTexture(adapter.GetTexture());
+            var newAdapter = Instantiate(spriteAdapterPrefab);
+            var na = newAdapter.GetComponent<SpriteAdapter>();
+            na.SetTexture(adapter.GetTexture());
+            imageStacker.AddImage(na);
         }
 
         private string[] GetThumbnailPaths(bool debugMode)

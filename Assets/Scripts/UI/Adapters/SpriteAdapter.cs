@@ -25,6 +25,8 @@ namespace UI.Adapters
             texture2D = texture;
         }
 
+        public GameObject GameObject => gameObject;
+
         public Texture2D GetTexture()
         {
             return texture2D;
