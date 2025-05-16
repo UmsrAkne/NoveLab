@@ -13,5 +13,7 @@ namespace Core
         public void SetTexture(Texture2D texture);
 
         public GameObject GameObject { get; }
+
+        public void FadeIn(float duration);
     }
 }

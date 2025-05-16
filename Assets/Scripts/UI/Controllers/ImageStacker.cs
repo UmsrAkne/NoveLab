@@ -25,6 +25,7 @@ namespace UI.Controllers
             imageGameObject.transform.SetAsLastSibling();
 
             activeImages.Add(newImage);
+            newImage.FadeIn(0.2f);
 
             // 超えたら古いやつ削除
             if (activeImages.Count > maxCount)
