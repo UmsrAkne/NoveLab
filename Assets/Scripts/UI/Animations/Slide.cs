@@ -24,6 +24,9 @@ namespace UI.Animations
         // ReSharper disable once MemberCanBePrivate.Global
         public float Angle { get; set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
+        public int RepeatCount { get; set; } = 1;
+
         public Slide(IDisplayImage image)
         {
             this.image = image;
@@ -52,29 +55,43 @@ namespace UI.Animations
         {
             IsPlaying = true;
 
-            // 開始位置を取得
             var start = image.GameObject.GetComponent<RectTransform>().anchoredPosition;
-
-            // 移動方向（角度から算出）
             var radians = Angle * Mathf.Deg2Rad;
             var offset = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)) * Distance;
             var end = start + offset;
 
-            var elapsed = 0f;
+            var remaining = RepeatCount;
 
-            while (elapsed < Duration)
+            // 初回の方向：true = start -> end, false = end -> start
+            var forward = true;
+
+            while (remaining != 0)
             {
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
-                elapsed += Time.deltaTime;
+                var from = forward ? start : end;
+                var to = forward ? end : start;
 
-                var t = Mathf.Clamp01(elapsed / Duration);
-                var eased = Mathf.SmoothStep(0, 1, t); // イージング
+                var elapsed = 0f;
 
-                var pos = Vector2.LerpUnclamped(start, end, eased);
-                image.SetPosition(pos);
+                while (elapsed < Duration)
+                {
+                    await UniTask.Yield(PlayerLoopTiming.Update, token);
+                    elapsed += Time.deltaTime;
+
+                    var t = Mathf.Clamp01(elapsed / Duration);
+                    var eased = Mathf.SmoothStep(0, 1, t);
+                    var pos = Vector2.LerpUnclamped(from, to, eased);
+                    image.SetPosition(pos);
+                }
+
+                image.SetPosition(to);
+
+                if (remaining > 0)
+                {
+                    remaining--;
+                }
+
+                forward = !forward;
             }
-
-            image.SetPosition(end);
 
             IsPlaying = false;
             OnCompleted?.Invoke();
