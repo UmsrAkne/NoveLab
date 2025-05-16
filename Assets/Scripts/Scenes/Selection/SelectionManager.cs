@@ -54,13 +54,16 @@ namespace Scenes.Selection
             }
         }
 
-        private void AddImage(Texture2D texture)
+        private void AddImage(Texture2D texture, int width)
         {
             var imageGameObject = Instantiate(imagePrefab, thumbnailContainer.transform);
             var adapter = imageGameObject.GetComponent<SpriteAdapter>();
             adapter.SetTexture(texture);
-            adapter.SetScale(0.15f);
+
+            var scale = (float)width / texture.width;
+            adapter.SetScale(scale);
             adapter.SetAlpha(0.5f);
+
             imageSelector.DisplayImages.Add(adapter);
         }
 
@@ -78,7 +81,7 @@ namespace Scenes.Selection
             foreach (var imagePath in imagePaths)
             {
                 var texture = await ImageLoader.LoadTexture(imagePath, false);
-                AddImage(texture);
+                AddImage(texture, 160);
             }
 
             imageSelector.DisplayImages.First()?.SetAlpha(1);
