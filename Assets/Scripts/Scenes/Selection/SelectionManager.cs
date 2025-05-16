@@ -6,6 +6,7 @@ using UI.Adapters;
 using UI.Controllers;
 using UnityEditor;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace Scenes.Selection
 {
@@ -13,6 +14,9 @@ namespace Scenes.Selection
     {
         [SerializeField]
         private GameObject imagePrefab;
+
+        [SerializeField]
+        private GameObject spriteAdapterPrefab;
 
         [SerializeField]
         private Transform thumbnailContainer;
@@ -23,13 +27,16 @@ namespace Scenes.Selection
         [SerializeField]
         private GameObject backgroundImage;
 
+        [SerializeField]
+        private ImageStacker imageStacker;
+
         private int selectedIndex;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
         {
             #if UNITY_EDITOR
-            LoadDebugImages();
+            LoadDebugImages().Forget();
             #endif
         }
 
@@ -47,17 +54,20 @@ namespace Scenes.Selection
             }
         }
 
-        private void AddImage(Texture2D texture)
+        private void AddImage(Texture2D texture, int width)
         {
             var imageGameObject = Instantiate(imagePrefab, thumbnailContainer.transform);
             var adapter = imageGameObject.GetComponent<SpriteAdapter>();
             adapter.SetTexture(texture);
-            adapter.SetScale(0.15f);
-            adapter.SetAlpha(0.5f);
+
+            var scale = (float)width / texture.width;
+            adapter.SetScale(scale);
+            adapter.SetAlpha(0.2f);
+
             imageSelector.DisplayImages.Add(adapter);
         }
 
-        private async void LoadDebugImages()
+        private async UniTask LoadDebugImages()
         {
             if (EditorApplication.isPlaying && !Application.isEditor)
             {
@@ -71,7 +81,7 @@ namespace Scenes.Selection
             foreach (var imagePath in imagePaths)
             {
                 var texture = await ImageLoader.LoadTexture(imagePath, false);
-                AddImage(texture);
+                AddImage(texture, 160);
             }
 
             imageSelector.DisplayImages.First()?.SetAlpha(1);
@@ -86,8 +96,10 @@ namespace Scenes.Selection
                 return;
             }
 
-            var component = backgroundImage.GetComponent<SpriteAdapter>();
-            component.SetTexture(adapter.GetTexture());
+            var newAdapter = Instantiate(spriteAdapterPrefab);
+            var na = newAdapter.GetComponent<SpriteAdapter>();
+            na.SetTexture(adapter.GetTexture());
+            imageStacker.AddImage(na);
         }
 
         private string[] GetThumbnailPaths(bool debugMode)

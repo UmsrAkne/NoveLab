@@ -1,4 +1,5 @@
 using Core;
+using UI.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,8 @@ namespace UI.Adapters
         private Image image;
 
         private Texture2D texture2D;
+        private FadeIn fadeIn;
+        private Slide slide;
 
         public void SetTexture(Texture2D texture)
         {
@@ -24,6 +27,8 @@ namespace UI.Adapters
             image.SetNativeSize();
             texture2D = texture;
         }
+
+        public GameObject GameObject => gameObject;
 
         public Texture2D GetTexture()
         {
@@ -47,6 +52,26 @@ namespace UI.Adapters
             var rt = image.rectTransform;
             var originalSize = image.sprite.rect.size;
             rt.sizeDelta = originalSize * scale;
+        }
+
+        public void FadeIn(float duration)
+        {
+            fadeIn.Duration = duration;
+            fadeIn.Start();
+        }
+
+        public void Slide(float duration, float angle, float distance)
+        {
+            slide.Duration = duration;
+            slide.Angle = angle;
+            slide.Distance = distance;
+            slide.Start();
+        }
+
+        private void Awake()
+        {
+            fadeIn = new FadeIn(this);
+            slide = new Slide(this);
         }
     }
 }

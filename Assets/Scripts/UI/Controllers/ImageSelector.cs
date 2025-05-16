@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core;
 using UnityEngine;
@@ -79,7 +80,18 @@ namespace UI.Controllers
             // 全てを非選択状態に（表示を戻す）
             for (var i = 0; i < DisplayImages.Count; i++)
             {
-                DisplayImages[i].SetAlpha(i == index ? 1.0f : 0.5f); // 例: 選択中は不透明、それ以外は半透明
+                if (i == index)
+                {
+                    DisplayImages[i].SetAlpha(1.0f);
+                }
+                else if(Math.Abs(index - i) == 1)
+                {
+                    DisplayImages[i].SetAlpha(0.45f);
+                }
+                else
+                {
+                    DisplayImages[i].SetAlpha(0.2f);
+                }
             }
 
             selectedIndex = index;
