@@ -62,7 +62,7 @@ namespace Scenes.Selection
 
             var scale = (float)width / texture.width;
             adapter.SetScale(scale);
-            adapter.SetAlpha(0.5f);
+            adapter.SetAlpha(0.2f);
 
             imageSelector.DisplayImages.Add(adapter);
         }
