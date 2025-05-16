@@ -18,6 +18,9 @@ namespace UI.Animations
         // ReSharper disable once MemberCanBePrivate.Global
         public float Duration { get; set; } = 0.5f;
 
+        // ReSharper disable once MemberCanBePrivate.Global
+        public float Delay { get; set; } = 0f;
+
         public FadeIn(IDisplayImage image)
         {
             this.image = image;
@@ -45,10 +48,14 @@ namespace UI.Animations
         private async UniTaskVoid Run(CancellationToken token)
         {
             IsPlaying = true;
-            var elapsed = 0f;
-
             image.SetAlpha(0);
 
+            if (Delay > 0)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(Delay), cancellationToken: token);
+            }
+
+            var elapsed = 0f;
             while (elapsed < Duration)
             {
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
