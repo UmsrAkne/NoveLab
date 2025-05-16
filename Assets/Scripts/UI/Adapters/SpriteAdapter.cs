@@ -12,6 +12,7 @@ namespace UI.Adapters
 
         private Texture2D texture2D;
         private FadeIn fadeIn;
+        private Slide slide;
 
         public void SetTexture(Texture2D texture)
         {
@@ -59,9 +60,18 @@ namespace UI.Adapters
             fadeIn.Start();
         }
 
+        public void Slide(float duration, float angle, float distance)
+        {
+            slide.Duration = duration;
+            slide.Angle = angle;
+            slide.Distance = distance;
+            slide.Start();
+        }
+
         private void Awake()
         {
             fadeIn = new FadeIn(this);
+            slide = new Slide(this);
         }
     }
 }

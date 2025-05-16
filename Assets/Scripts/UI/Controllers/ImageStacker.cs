@@ -26,6 +26,7 @@ namespace UI.Controllers
 
             activeImages.Add(newImage);
             newImage.FadeIn(0.2f);
+            newImage.Slide(0.3f, 180f, 30f);
 
             // 超えたら古いやつ削除
             if (activeImages.Count > maxCount)

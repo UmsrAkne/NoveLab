@@ -15,5 +15,7 @@ namespace Core
         public GameObject GameObject { get; }
 
         public void FadeIn(float duration);
+
+        public void Slide(float duration, float angle, float distance);
     }
 }
