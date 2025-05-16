@@ -6,6 +6,7 @@ using UI.Adapters;
 using UI.Controllers;
 using UnityEditor;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace Scenes.Selection
 {
@@ -35,7 +36,7 @@ namespace Scenes.Selection
         private void Start()
         {
             #if UNITY_EDITOR
-            LoadDebugImages();
+            LoadDebugImages().Forget();
             #endif
         }
 
@@ -63,7 +64,7 @@ namespace Scenes.Selection
             imageSelector.DisplayImages.Add(adapter);
         }
 
-        private async void LoadDebugImages()
+        private async UniTask LoadDebugImages()
         {
             if (EditorApplication.isPlaying && !Application.isEditor)
             {
