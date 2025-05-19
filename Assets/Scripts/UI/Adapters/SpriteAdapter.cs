@@ -15,6 +15,9 @@ namespace UI.Adapters
         private FadeIn fadeIn;
         private Slide slide;
 
+        private Vector2 basePos;
+        private Vector2 shakeOffset;
+
         private readonly Dictionary<string, IUIAnimation> animations = new();
 
         public void SetTexture(Texture2D texture)
@@ -98,6 +101,23 @@ namespace UI.Adapters
             {
                 keyValuePair.Value.Start();
             }
+        }
+
+        public void SetBasePosition(Vector2 pos)
+        {
+            basePos = pos;
+            UpdateFinalPosition();
+        }
+
+        public void SetOffsetPosition(Vector2 offset)
+        {
+            shakeOffset = offset;
+            UpdateFinalPosition();
+        }
+
+        private void UpdateFinalPosition()
+        {
+            image.rectTransform.anchoredPosition = basePos + shakeOffset;
         }
 
         private void Awake()

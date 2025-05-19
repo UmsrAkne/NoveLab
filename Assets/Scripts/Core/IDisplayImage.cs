@@ -7,8 +7,6 @@ namespace Core
     {
         public void SetAlpha(float alpha);
 
-        public void SetPosition(Vector2 anchoredPosition);
-
         public void SetScale(float scale);
 
         public void SetTexture(Texture2D texture);
@@ -18,5 +16,9 @@ namespace Core
         public void RegisterAnimation(string key, IUIAnimation animation);
 
         public void PlayAnimations();
+
+        void SetBasePosition(Vector2 pos);
+
+        void SetOffsetPosition(Vector2 offset);
     }
 }
