@@ -1,3 +1,4 @@
+using UI.Animations;
 using UnityEngine;
 
 namespace Core
@@ -14,8 +15,8 @@ namespace Core
 
         public GameObject GameObject { get; }
 
-        public void FadeIn(float duration);
+        public void RegisterAnimation(string key, IUIAnimation animation);
 
-        public void Slide(float duration, float angle, float distance);
+        public void PlayAnimations();
     }
 }
