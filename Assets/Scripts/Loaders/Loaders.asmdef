@@ -1,3 +1,6 @@
 {
-	"name": "Loaders"
+	"name": "Loaders",
+	"references": [
+		"UniTask"
+	]
 }
