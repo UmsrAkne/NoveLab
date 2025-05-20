@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Core;
 using UI.Animations;
 using UnityEngine;
@@ -13,6 +14,11 @@ namespace UI.Adapters
         private Texture2D texture2D;
         private FadeIn fadeIn;
         private Slide slide;
+
+        private Vector2 basePos;
+        private Vector2 shakeOffset;
+
+        private readonly Dictionary<string, IUIAnimation> animations = new();
 
         public void SetTexture(Texture2D texture)
         {
@@ -66,6 +72,52 @@ namespace UI.Adapters
             slide.Angle = angle;
             slide.Distance = distance;
             slide.Start();
+        }
+
+        public void RegisterAnimation(string key, IUIAnimation anime)
+        {
+            if (animations.ContainsKey(key))
+            {
+                Debug.LogWarning($"Animation with key '{key}' already registered. Overwriting.");
+            }
+
+            animations[key] = anime;
+
+            anime.OnCompleted += () =>
+            {
+                if (!animations.ContainsKey(key))
+                {
+                    return;
+                }
+
+                animations.Remove(key);
+                Debug.Log($"Animation '{key}' completed and removed from registry.");
+            };
+        }
+
+        public void PlayAnimations()
+        {
+            foreach (var keyValuePair in animations)
+            {
+                keyValuePair.Value.Start();
+            }
+        }
+
+        public void SetBasePosition(Vector2 pos)
+        {
+            basePos = pos;
+            UpdateFinalPosition();
+        }
+
+        public void SetOffsetPosition(Vector2 offset)
+        {
+            shakeOffset = offset;
+            UpdateFinalPosition();
+        }
+
+        private void UpdateFinalPosition()
+        {
+            image.rectTransform.anchoredPosition = basePos + shakeOffset;
         }
 
         private void Awake()

@@ -80,10 +80,10 @@ namespace UI.Animations
                     var t = Mathf.Clamp01(elapsed / Duration);
                     var eased = Mathf.SmoothStep(0, 1, t);
                     var pos = Vector2.LerpUnclamped(from, to, eased);
-                    image.SetPosition(pos);
+                    image.SetBasePosition(pos);
                 }
 
-                image.SetPosition(to);
+                image.SetBasePosition(to);
 
                 if (remaining > 0)
                 {
