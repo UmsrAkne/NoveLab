@@ -76,4 +76,7 @@ crashlytics-build.properties
 
 Bin/*
 .vscode/*
-.idea/*
+.IDEA/*
+
+Assets/Fonts/*SDF.asset
+Assets/Fonts/*SDF.asset.meta
