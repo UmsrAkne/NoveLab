@@ -1,3 +1,5 @@
+using Scenes.Scenario;
+
 namespace UI.TypeWriter
 {
     public class TypewriterEngine
@@ -11,6 +13,11 @@ namespace UI.TypeWriter
         public TypewriterEngine(ITextDisplayTarget target)
         {
             this.target = target;
+        }
+
+        public void SetText(ScenarioEntry scenario)
+        {
+            SetText(scenario.Text);
         }
 
         public void SetText(string text)

@@ -48,20 +48,25 @@ namespace Scenes.Scenario
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                if (scenarioIndex >= scenarioEntries.Count)
-                {
-                    return;
-                }
+                WriteText();
+            }
+        }
 
-                if (typewriterEngine.IsFinished)
-                {
-                    typewriterEngine.SetText(scenarioEntries[scenarioIndex].Text);
-                    scenarioIndex++;
-                }
-                else
-                {
-                    typewriterEngine.ShowFullText();
-                }
+        private void WriteText()
+        {
+            if (scenarioIndex >= scenarioEntries.Count)
+            {
+                return;
+            }
+
+            if (typewriterEngine.IsFinished)
+            {
+                typewriterEngine.SetText(scenarioEntries[scenarioIndex]);
+                scenarioIndex++;
+            }
+            else
+            {
+                typewriterEngine.ShowFullText();
             }
         }
 
