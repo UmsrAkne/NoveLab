@@ -1,6 +1,6 @@
 using System;
 
-namespace UI.Animations
+namespace Core
 {
     public interface IUIAnimation
     {

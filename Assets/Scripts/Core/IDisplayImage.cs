@@ -1,4 +1,3 @@
-using UI.Animations;
 using UnityEngine;
 
 namespace Core
