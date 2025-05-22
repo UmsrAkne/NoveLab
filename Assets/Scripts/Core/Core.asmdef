@@ -1,10 +1,7 @@
 {
-    "name": "UI.TypeWriter",
+    "name": "Core",
     "rootNamespace": "",
-    "references": [
-        "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:c663e7a176411c24abab6c66a708d4f2"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

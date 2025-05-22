@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Audio;
 using Cysharp.Threading.Tasks;
 using Loaders;
@@ -10,6 +11,8 @@ namespace Scenes.Scenario
     public class ScenarioManager : MonoBehaviour
     {
         private TypewriterEngine typewriterEngine;
+        private readonly List<ScenarioEntry> scenarioEntries = new ();
+        private int scenarioIndex;
 
         [SerializeField]
         private AudioLoader audioLoader;
@@ -29,7 +32,9 @@ namespace Scenes.Scenario
             Debug.Log(path);
             LoadSound(path).Forget();
 
-            typewriterEngine.SetText("Dummy Text. Dummy Text. Dummy Text. Dummy Text. Dummy Text. Dummy Text. ");
+            scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy1 Dummy1 Dummy1 Dummy1 Dummy1 Dummy1", });
+            scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy2 Dummy2 Dummy2 Dummy2 Dummy2 Dummy2", });
+            scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy3 Dummy3 Dummy3 Dummy3 Dummy3 Dummy3", });
         }
 
         private void Awake()
@@ -40,6 +45,24 @@ namespace Scenes.Scenario
         private void Update()
         {
             typewriterEngine.Update(Time.deltaTime);
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (scenarioIndex >= scenarioEntries.Count)
+                {
+                    return;
+                }
+
+                if (typewriterEngine.IsFinished)
+                {
+                    typewriterEngine.SetText(scenarioEntries[scenarioIndex].Text);
+                    scenarioIndex++;
+                }
+                else
+                {
+                    typewriterEngine.ShowFullText();
+                }
+            }
         }
 
         private async UniTaskVoid LoadSound(string path)

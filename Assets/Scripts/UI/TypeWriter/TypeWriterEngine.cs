@@ -4,7 +4,7 @@ namespace UI.TypeWriter
     {
         private readonly float interval = 0.05f; // 1文字表示ごとの間隔（秒）
         private readonly ITextDisplayTarget target;
-        private string fullText;
+        private string fullText = string.Empty;
         private int currentIndex;
         private float elapsed;
 
@@ -15,6 +15,7 @@ namespace UI.TypeWriter
 
         public void SetText(string text)
         {
+            target.Text = string.Empty;
             fullText = text;
             currentIndex = 0;
             elapsed = 0f;
