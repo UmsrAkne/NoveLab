@@ -12,13 +12,13 @@ namespace UI.Images
         private readonly Dictionary<string, IUIAnimation> animations = new();
 
         [SerializeField]
-        private SpriteAdapter baseImage;
+        private SpriteRendererAdapter baseImage;
 
         [SerializeField]
-        private SpriteAdapter eye;
+        private SpriteRendererAdapter eye;
 
         [SerializeField]
-        private SpriteAdapter mouth;
+        private SpriteRendererAdapter mouth;
 
         public GameObject GameObject => gameObject;
 
@@ -31,16 +31,18 @@ namespace UI.Images
         public void SetTextures(Texture2D baseTexture, Texture2D eyeTex, Texture2D mouthTex)
         {
             baseImage.SetTexture(baseTexture);
+            baseImage.SetLayerIndex(0);
             eye.SetTexture(eyeTex);
+            eye.SetLayerIndex(1);
             mouth.SetTexture(mouthTex);
+            mouth.SetLayerIndex(2);
         }
 
         public void SetAlpha(float alpha)
         {
-            if (canvasGroup != null)
-            {
-                canvasGroup.alpha = alpha;
-            }
+            baseImage.SetAlpha(alpha);
+            eye.SetAlpha(alpha);
+            mouth.SetAlpha(alpha);
         }
 
         public void SetScale(float scale)
@@ -88,12 +90,10 @@ namespace UI.Images
 
         public void SetBasePosition(Vector2 pos)
         {
-            throw new System.NotImplementedException();
         }
 
         public void SetOffsetPosition(Vector2 offset)
         {
-            throw new System.NotImplementedException();
         }
     }
 }
