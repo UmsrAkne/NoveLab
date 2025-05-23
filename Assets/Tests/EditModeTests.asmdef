@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Loaders",
-        "UI.TypeWriter"
+        "UI.TypeWriter",
+        "Core"
     ],
     "includePlatforms": [
         "Editor"

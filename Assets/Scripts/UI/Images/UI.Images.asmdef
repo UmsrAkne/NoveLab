@@ -1,0 +1,17 @@
+{
+    "name": "UI.Images",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c663e7a176411c24abab6c66a708d4f2",
+        "GUID:19c798719c6eecc41ba301314fa36835"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
