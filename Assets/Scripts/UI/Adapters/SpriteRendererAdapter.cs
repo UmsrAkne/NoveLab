@@ -27,10 +27,9 @@ namespace UI.Adapters
                 return;
             }
 
-            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 72);
             spriteRenderer.sprite = sprite;
             texture2D = texture;
-            spriteRenderer.transform.localScale = new Vector3(100f, 100f, 1f);
             if (spriteMask != null)
             {
                 spriteMask.sprite = sprite;
