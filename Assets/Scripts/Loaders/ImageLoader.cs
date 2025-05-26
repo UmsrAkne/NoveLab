@@ -7,9 +7,11 @@ namespace Loaders
 {
     public static class ImageLoader
     {
+        private readonly static Dictionary<string, Texture2D> TextureCache = new();
+
         /// <summary>
         /// Loads an image file and returns it as a Texture2D.
-        /// You can choose to keep or remove the alpha (transparency) channel.
+        /// Uses cache if available. You can choose to keep or remove the alpha (transparency) channel.
         /// </summary>
         /// <param name="filePath">The path to the image file.</param>
         /// <param name="keepAlpha">
@@ -18,6 +20,18 @@ namespace Loaders
         /// <returns>The loaded Texture2D, or null if loading fails.</returns>
         public static async Task<Texture2D> LoadTexture(string filePath, bool keepAlpha = true)
         {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                Debug.LogError("File path is null or empty.");
+                return null;
+            }
+
+            // キャッシュがあれば再利用
+            if (TextureCache.TryGetValue(filePath, out var cachedTexture))
+            {
+                return cachedTexture;
+            }
+
             if (!File.Exists(filePath))
             {
                 Debug.LogError($"Image file not found: {filePath}");
@@ -26,17 +40,19 @@ namespace Loaders
 
             var imageData = await File.ReadAllBytesAsync(filePath);
 
-            // サイズは適当、後でロード時に上書きされる
             var texture = keepAlpha
                 ? new Texture2D(2, 2)
                 : new Texture2D(2, 2, TextureFormat.RGB24, true);
 
-            if (texture.LoadImage(imageData)) // 読み込み成功したら
+            if (texture.LoadImage(imageData))
             {
-                // 高品質で設定
-                texture.filterMode = FilterMode.Trilinear;           // 滑らか補間（or Trilinear）
-                texture.wrapMode = TextureWrapMode.Clamp;           // UIなら繰り返し不要
-                texture.anisoLevel = 1;                             // UI用途なら基本1でOK（斜め表示多いなら2以上）
+                texture.filterMode = FilterMode.Trilinear;
+                texture.wrapMode = TextureWrapMode.Clamp;
+                texture.anisoLevel = 1;
+
+                // キャッシュに登録
+                TextureCache[filePath] = texture;
+
                 return texture;
             }
 
@@ -77,6 +93,11 @@ namespace Loaders
             }
 
             return results;
+        }
+
+        public static void ClearCache()
+        {
+            TextureCache.Clear();
         }
     }
 }

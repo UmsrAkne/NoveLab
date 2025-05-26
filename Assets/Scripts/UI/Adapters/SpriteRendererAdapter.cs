@@ -45,6 +45,8 @@ namespace UI.Adapters
 
         public GameObject GameObject => gameObject;
 
+        public int LayerIndex => spriteRenderer.sortingOrder;
+
         public void SetAlpha(float alpha)
         {
             if (spriteRenderer == null)
