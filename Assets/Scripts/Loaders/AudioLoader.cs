@@ -38,7 +38,7 @@ namespace Loaders
             clip.name = Path.GetFileNameWithoutExtension(filePath); // 任意
 
             // キャッシュに追加
-            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            var fileName = Path.GetFileName(filePath);
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
             if (!string.IsNullOrWhiteSpace(fileName) && !string.IsNullOrWhiteSpace(fileNameWithoutExtension))
             {
