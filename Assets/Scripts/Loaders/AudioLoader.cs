@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -34,10 +35,19 @@ namespace Loaders
             }
 
             var clip = DownloadHandlerAudioClip.GetContent(request);
-            clip.name = System.IO.Path.GetFileNameWithoutExtension(filePath); // 任意
+            clip.name = Path.GetFileNameWithoutExtension(filePath); // 任意
 
             // キャッシュに追加
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
+            if (!string.IsNullOrWhiteSpace(fileName) && !string.IsNullOrWhiteSpace(fileNameWithoutExtension))
+            {
+                audioClipCache[fileName] = clip;
+                audioClipCache[fileNameWithoutExtension] = clip;
+            }
+
             audioClipCache[filePath] = clip;
+
             return clip;
         }
 
