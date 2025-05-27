@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -8,7 +10,7 @@ namespace Loaders
     public class AudioLoader : MonoBehaviour
     {
         // キャッシュ辞書
-        private readonly Dictionary<string, AudioClip> audioClipCache = new ();
+        private readonly Dictionary<string, AudioClip> audioClipCache = new (StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// 指定したファイルパスの ogg ファイルをキャッシュとして読み込み
@@ -33,10 +35,19 @@ namespace Loaders
             }
 
             var clip = DownloadHandlerAudioClip.GetContent(request);
-            clip.name = System.IO.Path.GetFileNameWithoutExtension(filePath); // 任意
+            clip.name = Path.GetFileNameWithoutExtension(filePath); // 任意
 
             // キャッシュに追加
+            var fileName = Path.GetFileName(filePath);
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
+            if (!string.IsNullOrWhiteSpace(fileName) && !string.IsNullOrWhiteSpace(fileNameWithoutExtension))
+            {
+                audioClipCache[fileName] = clip;
+                audioClipCache[fileNameWithoutExtension] = clip;
+            }
+
             audioClipCache[filePath] = clip;
+
             return clip;
         }
 

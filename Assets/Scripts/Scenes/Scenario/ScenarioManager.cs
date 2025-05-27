@@ -24,22 +24,17 @@ namespace Scenes.Scenario
         private ImageStacker imageStacker;
 
         [SerializeField]
-        private AudioLoader audioLoader;
-
-        [SerializeField]
-        private AudioSource audioSource;
-
-        [SerializeField]
-        private BgmPlayer bgmPlayer;
-
-        [SerializeField]
         private TextMeshProUGUI textMeshPro;
+
+        [SerializeField]
+        private AudioManager audioManager;
+
+        [SerializeField]
+        private AudioLoader audioLoader;
 
         private void Start()
         {
-            var path = @"C:\Users\Public\testData\sounds\list2\music.ogg";
-            Debug.Log(path);
-            LoadSound(path).Forget();
+            audioManager.LoadDebugBgm().Forget();
             LoadDebugImages().Forget();
 
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy1 Dummy1 Dummy1 Dummy1 Dummy1 Dummy1", });
@@ -78,13 +73,6 @@ namespace Scenes.Scenario
             {
                 typewriterEngine.ShowFullText();
             }
-        }
-
-        private async UniTaskVoid LoadSound(string path)
-        {
-            await audioLoader.LoadAudioClipAsync(path);
-            var clip = audioLoader.GetCachedClip(path);
-            await bgmPlayer.PlayBgmAsync(clip, 5f);
         }
 
         private async UniTaskVoid LoadDebugImages()
