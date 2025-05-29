@@ -35,6 +35,7 @@ namespace Scenes.Scenario
         private void Start()
         {
             audioManager.LoadDebugBgm().Forget();
+            audioManager.LoadDebugVoice().Forget();
             LoadDebugImages().Forget();
 
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy1 Dummy1 Dummy1 Dummy1 Dummy1 Dummy1", });
