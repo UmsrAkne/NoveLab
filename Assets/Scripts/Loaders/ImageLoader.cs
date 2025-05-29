@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace Loaders
 {
     public static class ImageLoader
     {
-        private readonly static Dictionary<string, Texture2D> TextureCache = new();
+        private readonly static Dictionary<string, Texture2D> TextureCache = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Loads an image file and returns it as a Texture2D.
