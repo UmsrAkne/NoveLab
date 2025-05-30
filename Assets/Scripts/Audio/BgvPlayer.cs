@@ -14,6 +14,7 @@ namespace Audio
         private AudioSource[] sources;
         private AudioOrder[] orderCaches;
         private bool[] playlistUpdatedFlags;
+        private CancellationTokenSource[] fadeTokens;
         private CancellationTokenSource[] cancelTokens;
 
         private void Awake()
@@ -21,6 +22,7 @@ namespace Audio
             sources = new AudioSource[channelCount];
             orderCaches = new AudioOrder[channelCount];
             cancelTokens = new CancellationTokenSource[channelCount];
+            fadeTokens = new CancellationTokenSource[channelCount];
             playlistUpdatedFlags = new bool[channelCount];
 
             for (var i = 0; i < channelCount; i++)
@@ -87,6 +89,55 @@ namespace Audio
             }
 
             sources[channelIndex].Stop();
+        }
+
+        public void FadeInVolume(int channelIndex, float max, float durationSec)
+        {
+            if (!IsValidChannel(channelIndex))
+            {
+                return;
+            }
+
+            fadeTokens[channelIndex]?.Cancel(); // 前のフェード中断
+            fadeTokens[channelIndex] = new CancellationTokenSource();
+
+            _ = FadeVolumeAsync(channelIndex, sources[channelIndex].volume, max, durationSec,
+                fadeTokens[channelIndex].Token);
+        }
+
+        public void FadeOutVolume(int channelIndex, float min, float durationSec)
+        {
+            if (!IsValidChannel(channelIndex))
+            {
+                return;
+            }
+
+            fadeTokens[channelIndex]?.Cancel(); // 前のフェード中断
+            fadeTokens[channelIndex] = new CancellationTokenSource();
+
+            _ = FadeVolumeAsync(channelIndex, sources[channelIndex].volume, min, durationSec,
+                fadeTokens[channelIndex].Token);
+        }
+
+        private async UniTaskVoid FadeVolumeAsync(int channelIndex, float from, float to, float durationSec, CancellationToken token)
+        {
+            var source = sources[channelIndex];
+            var elapsed = 0f;
+
+            while (elapsed < durationSec)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                elapsed += Time.deltaTime;
+                var t = Mathf.Clamp01(elapsed / durationSec);
+                source.volume = Mathf.Lerp(from, to, t);
+                await UniTask.Yield();
+            }
+
+            source.volume = to;
         }
 
         private async UniTaskVoid LoopPlayAsync(int channelIndex, float volume, float pan, CancellationToken token)

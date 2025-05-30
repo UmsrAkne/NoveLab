@@ -33,6 +33,7 @@ namespace Audio
             {
                 var clip = audioLoader.GetCachedClip(order.FileName);
                 await voicePlayer.PlayVoiceAsync(clip, order);
+                bgvPlayer.FadeOutVolume(order.ChannelIndex, 0, 0.25f);
             }
 
             if (order.AudioType == AudioType.Bgv)
@@ -80,8 +81,8 @@ namespace Audio
 
         private void OnVoicePlaybackCompleted(int channel)
         {
-            Debug.Log("Voice completed");
             bgvPlayer.Play(channel);
+            bgvPlayer.FadeInVolume(channel, 1f, 0.4f);
         }
     }
 }
