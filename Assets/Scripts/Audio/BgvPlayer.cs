@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Audio
@@ -7,6 +8,7 @@ namespace Audio
         [SerializeField] private int channelCount = 4;
 
         private AudioSource[] sources;
+        private List<List<AudioClip>> playlists = new ();
 
         private void Awake()
         {
@@ -32,6 +34,12 @@ namespace Audio
             source.volume = order.Volume;
             source.panStereo = order.Pan;
             source.Play();
+        }
+
+        public void PrepareBgVoiceClips(int channelIndex, List<AudioClip> clip)
+        {
+            playlists[channelIndex].Clear();
+            playlists[channelIndex].AddRange(clip);
         }
 
         public void Stop(int channelIndex)
