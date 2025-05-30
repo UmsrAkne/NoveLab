@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Loaders;
 using UnityEngine;
@@ -36,7 +37,11 @@ namespace Audio
 
             if (order.AudioType == AudioType.Bgv)
             {
-                // Bgv 指定の場合の処理
+                var clips = order.FileNames.
+                    Select(orderFileName => audioLoader.GetCachedClip(orderFileName))
+                    .ToList();
+
+                bgvPlayer.PrepareBgVoiceClips(order, clips);
             }
 
             // 他の AudioType に応じた処理もここに追加予定
@@ -75,7 +80,8 @@ namespace Audio
 
         private void OnVoicePlaybackCompleted(int channel)
         {
-            // ここに voicePlayer の再生終了時の処理を書く。
+            Debug.Log("Voice completed");
+            bgvPlayer.Play(channel);
         }
     }
 }
