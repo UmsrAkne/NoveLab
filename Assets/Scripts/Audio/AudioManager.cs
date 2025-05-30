@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Loaders;
 using UnityEngine;
@@ -16,6 +17,9 @@ namespace Audio
         [SerializeField]
         private VoicePlayer voicePlayer;
 
+        [SerializeField]
+        private BgvPlayer bgvPlayer;
+
         public async UniTask PlayAsync(AudioOrder order)
         {
             if (order.AudioType == AudioType.Bgm)
@@ -29,6 +33,16 @@ namespace Audio
             {
                 var clip = audioLoader.GetCachedClip(order.FileName);
                 await voicePlayer.PlayVoiceAsync(clip, order);
+                bgvPlayer.FadeOutVolume(order.ChannelIndex, 0, 0.25f);
+            }
+
+            if (order.AudioType == AudioType.Bgv)
+            {
+                var clips = order.FileNames.
+                    Select(orderFileName => audioLoader.GetCachedClip(orderFileName))
+                    .ToList();
+
+                bgvPlayer.PrepareBgVoiceClips(order, clips);
             }
 
             // 他の AudioType に応じた処理もここに追加予定
@@ -49,7 +63,7 @@ namespace Audio
 
         public async UniTaskVoid LoadDebugVoice()
         {
-            var path = @"C:\Users\Public\testData\sounds\list2\se1.ogg";
+            var path = @"C:\Users\Public\testData\sounds\list3\test_message1.ogg";
             await audioLoader.LoadAudioClipAsync(path);
             var order = new AudioOrder()
             {
@@ -58,6 +72,17 @@ namespace Audio
             };
 
             await PlayAsync(order);
+        }
+
+        private void Awake()
+        {
+            voicePlayer.OnPlaybackCompleted += OnVoicePlaybackCompleted;
+        }
+
+        private void OnVoicePlaybackCompleted(int channel)
+        {
+            bgvPlayer.Play(channel);
+            bgvPlayer.FadeInVolume(channel, 1f, 0.4f);
         }
     }
 }
