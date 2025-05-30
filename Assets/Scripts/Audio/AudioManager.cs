@@ -16,6 +16,9 @@ namespace Audio
         [SerializeField]
         private VoicePlayer voicePlayer;
 
+        [SerializeField]
+        private BgvPlayer bgvPlayer;
+
         public async UniTask PlayAsync(AudioOrder order)
         {
             if (order.AudioType == AudioType.Bgm)
@@ -29,6 +32,11 @@ namespace Audio
             {
                 var clip = audioLoader.GetCachedClip(order.FileName);
                 await voicePlayer.PlayVoiceAsync(clip, order);
+            }
+
+            if (order.AudioType == AudioType.Bgv)
+            {
+                // Bgv 指定の場合の処理
             }
 
             // 他の AudioType に応じた処理もここに追加予定
@@ -49,7 +57,7 @@ namespace Audio
 
         public async UniTaskVoid LoadDebugVoice()
         {
-            var path = @"C:\Users\Public\testData\sounds\list2\se1.ogg";
+            var path = @"C:\Users\Public\testData\sounds\list3\test_message1.ogg";
             await audioLoader.LoadAudioClipAsync(path);
             var order = new AudioOrder()
             {
@@ -58,6 +66,16 @@ namespace Audio
             };
 
             await PlayAsync(order);
+        }
+
+        private void Awake()
+        {
+            voicePlayer.OnPlaybackCompleted += OnVoicePlaybackCompleted;
+        }
+
+        private void OnVoicePlaybackCompleted(int channel)
+        {
+            // ここに voicePlayer の再生終了時の処理を書く。
         }
     }
 }
