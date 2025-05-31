@@ -20,6 +20,9 @@ namespace Audio
         [SerializeField]
         private BgvPlayer bgvPlayer;
 
+        [SerializeField]
+        private SePlayer sePlayer;
+
         public async UniTask PlayAsync(AudioOrder order)
         {
             if (order.AudioType == AudioType.Bgm)
@@ -43,6 +46,12 @@ namespace Audio
                     .ToList();
 
                 bgvPlayer.PrepareBgVoiceClips(order, clips);
+            }
+
+            if (order.AudioType == AudioType.Se)
+            {
+                var clip = audioLoader.GetCachedClip(order.FileName);
+                sePlayer.PlaySe(clip, order);
             }
 
             // 他の AudioType に応じた処理もここに追加予定
