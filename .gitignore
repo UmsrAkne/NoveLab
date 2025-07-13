@@ -80,3 +80,5 @@ Bin/*
 
 Assets/Fonts/*SDF.asset
 Assets/Fonts/*SDF.asset.meta
+
+scenes/*

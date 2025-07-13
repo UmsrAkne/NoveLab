@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Loaders;
@@ -35,9 +36,7 @@ namespace Scenes.Selection
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
         {
-            #if UNITY_EDITOR
-            LoadDebugImages().Forget();
-            #endif
+            LoadSampleImages().Forget();
         }
 
         private void Update()
@@ -67,17 +66,9 @@ namespace Scenes.Selection
             imageSelector.DisplayImages.Add(adapter);
         }
 
-        private async UniTask LoadDebugImages()
+        private async UniTask LoadSampleImages()
         {
-            if (EditorApplication.isPlaying && !Application.isEditor)
-            {
-                // Editor で Play 中のみ、ビルド時はスルー
-                return;
-            }
-
-            Debug.Log("This runs ONLY in the editor during Play mode!");
-
-            var imagePaths = GetThumbnailPaths(true);
+            var imagePaths = GetThumbnailPaths();
             foreach (var imagePath in imagePaths)
             {
                 var texture = await ImageLoader.LoadTexture(imagePath, false);
@@ -102,9 +93,21 @@ namespace Scenes.Selection
             imageStacker.AddImage(na);
         }
 
-        private string[] GetThumbnailPaths(bool debugMode)
+        private string[] GetThumbnailPaths()
         {
-            return debugMode ? Directory.GetFiles(@"C:\Users\Public\testData\images") : Array.Empty<string>();
+            var exeDir = Path.GetDirectoryName(Application.dataPath) ?? string.Empty;
+            var scenarioDirectory = Path.Combine(exeDir, "scenes");
+
+            var imagePaths = new List<string>();
+            var scenarioDirectories = Directory.GetDirectories(scenarioDirectory);
+
+            foreach (var directory in scenarioDirectories)
+            {
+                var imageDir = Path.Combine(directory, "images");
+                imagePaths.Add(Directory.GetFiles(imageDir).FirstOrDefault());
+            }
+
+            return imagePaths.Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
         }
     }
 }
