@@ -6,6 +6,7 @@ using UI.Adapters;
 using UI.Controllers;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Scenes.Scenario;
 
 namespace Scenes.Selection
 {
@@ -30,6 +31,7 @@ namespace Scenes.Selection
         private ImageStacker imageStacker;
 
         private int selectedIndex;
+        private readonly List<string> imagePaths = new ();
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
@@ -49,6 +51,15 @@ namespace Scenes.Selection
                 imageSelector.MoveSelection(-1);
                 SetBackground();
             }
+            else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                var index = imageSelector.SelectedIndex;
+                if (index >= 0)
+                {
+                    var path = Directory.GetParent(Directory.GetParent(imagePaths[index])!.FullName);
+                    ScenarioManager.GlobalScenarioContext.ScenarioDirectoryPath = path?.FullName;
+                }
+            }
         }
 
         private void AddImage(Texture2D texture, int width)
@@ -66,7 +77,8 @@ namespace Scenes.Selection
 
         private async UniTask LoadSampleImages()
         {
-            var imagePaths = GetThumbnailPaths();
+            imagePaths.Clear();
+            imagePaths.AddRange(GetThumbnailPaths());
             foreach (var imagePath in imagePaths)
             {
                 var texture = await ImageLoader.LoadTexture(imagePath, false);

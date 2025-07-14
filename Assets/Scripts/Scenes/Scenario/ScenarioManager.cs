@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Audio;
+using Core;
 using Cysharp.Threading.Tasks;
 using Loaders;
 using TMPro;
@@ -12,6 +13,8 @@ namespace Scenes.Scenario
 {
     public class ScenarioManager : MonoBehaviour
     {
+        public static GlobalScenarioContext GlobalScenarioContext = new ();
+
         private TypewriterEngine typewriterEngine;
         private readonly List<ScenarioEntry> scenarioEntries = new ();
         private int scenarioIndex;
