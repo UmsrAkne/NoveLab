@@ -1,13 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Loaders;
 using UI.Adapters;
 using UI.Controllers;
-using UnityEditor;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Scenes.Scenario;
+using UI.Animations;
+using UnityEngine.SceneManagement;
 
 namespace Scenes.Selection
 {
@@ -31,7 +32,11 @@ namespace Scenes.Selection
         [SerializeField]
         private ImageStacker imageStacker;
 
+        [SerializeField]
+        private SceneFader sceneFader;
+
         private int selectedIndex;
+        private readonly List<string> imagePaths = new ();
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
@@ -51,6 +56,10 @@ namespace Scenes.Selection
                 imageSelector.MoveSelection(-1);
                 SetBackground();
             }
+            else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                HandleEnterPressed().Forget();
+            }
         }
 
         private void AddImage(Texture2D texture, int width)
@@ -68,7 +77,8 @@ namespace Scenes.Selection
 
         private async UniTask LoadSampleImages()
         {
-            var imagePaths = GetThumbnailPaths();
+            imagePaths.Clear();
+            imagePaths.AddRange(GetThumbnailPaths());
             foreach (var imagePath in imagePaths)
             {
                 var texture = await ImageLoader.LoadTexture(imagePath, false);
@@ -76,6 +86,19 @@ namespace Scenes.Selection
             }
 
             imageSelector.DisplayImages.First()?.SetAlpha(1);
+        }
+
+        private async UniTaskVoid HandleEnterPressed()
+        {
+            var index = imageSelector.SelectedIndex;
+            if (index >= 0)
+            {
+                var path = Directory.GetParent(Directory.GetParent(imagePaths[index])!.FullName);
+                ScenarioManager.GlobalScenarioContext.ScenarioDirectoryPath = path?.FullName;
+
+                await sceneFader.FadeOut(2f);
+                SceneManager.LoadScene("LoadingScene");
+            }
         }
 
         private void SetBackground()

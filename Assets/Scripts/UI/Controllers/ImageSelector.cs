@@ -11,20 +11,20 @@ namespace UI.Controllers
         [SerializeField]
         private ScrollRect scrollRect;
 
-        private int selectedIndex;
+        public int SelectedIndex { get; private set; }
 
         public List<IDisplayImage> DisplayImages { get; set; } = new ();
 
-        public IDisplayImage SelectedItem => DisplayImages[selectedIndex];
+        public IDisplayImage SelectedItem => DisplayImages[SelectedIndex];
 
         public void MoveSelection(int direction)
         {
-            var newIndex = selectedIndex + direction;
+            var newIndex = SelectedIndex + direction;
 
             // 範囲チェックして切り詰め（またはループさせるならここで）
             newIndex = Mathf.Clamp(newIndex, 0, DisplayImages.Count - 1);
 
-            if (newIndex != selectedIndex)
+            if (newIndex != SelectedIndex)
             {
                 Select(newIndex);
             }
@@ -94,7 +94,7 @@ namespace UI.Controllers
                 }
             }
 
-            selectedIndex = index;
+            SelectedIndex = index;
         }
     }
 }
