@@ -7,6 +7,7 @@ using UI.Controllers;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Scenes.Scenario;
+using UnityEngine.SceneManagement;
 
 namespace Scenes.Selection
 {
@@ -58,6 +59,7 @@ namespace Scenes.Selection
                 {
                     var path = Directory.GetParent(Directory.GetParent(imagePaths[index])!.FullName);
                     ScenarioManager.GlobalScenarioContext.ScenarioDirectoryPath = path?.FullName;
+                    SceneManager.LoadScene("LoadingScene");
                 }
             }
         }
