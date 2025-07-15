@@ -7,6 +7,7 @@ using UI.Controllers;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Scenes.Scenario;
+using UI.Animations;
 using UnityEngine.SceneManagement;
 
 namespace Scenes.Selection
@@ -31,6 +32,9 @@ namespace Scenes.Selection
         [SerializeField]
         private ImageStacker imageStacker;
 
+        [SerializeField]
+        private SceneFader sceneFader;
+
         private int selectedIndex;
         private readonly List<string> imagePaths = new ();
 
@@ -54,13 +58,7 @@ namespace Scenes.Selection
             }
             else if (Input.GetKeyDown(KeyCode.Return))
             {
-                var index = imageSelector.SelectedIndex;
-                if (index >= 0)
-                {
-                    var path = Directory.GetParent(Directory.GetParent(imagePaths[index])!.FullName);
-                    ScenarioManager.GlobalScenarioContext.ScenarioDirectoryPath = path?.FullName;
-                    SceneManager.LoadScene("LoadingScene");
-                }
+                HandleEnterPressed().Forget();
             }
         }
 
@@ -88,6 +86,19 @@ namespace Scenes.Selection
             }
 
             imageSelector.DisplayImages.First()?.SetAlpha(1);
+        }
+
+        private async UniTaskVoid HandleEnterPressed()
+        {
+            var index = imageSelector.SelectedIndex;
+            if (index >= 0)
+            {
+                var path = Directory.GetParent(Directory.GetParent(imagePaths[index])!.FullName);
+                ScenarioManager.GlobalScenarioContext.ScenarioDirectoryPath = path?.FullName;
+
+                await sceneFader.FadeOut(2f);
+                SceneManager.LoadScene("LoadingScene");
+            }
         }
 
         private void SetBackground()

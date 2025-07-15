@@ -534,6 +534,7 @@ MonoBehaviour:
   imageSelector: {fileID: 967734378}
   backgroundImage: {fileID: 0}
   imageStacker: {fileID: 1901221349}
+  sceneFader: {fileID: 2059028235}
 --- !u!4 &967734377
 Transform:
   m_ObjectHideFlags: 0
@@ -1323,6 +1324,8 @@ GameObject:
   - component: {fileID: 2059028232}
   - component: {fileID: 2059028234}
   - component: {fileID: 2059028233}
+  - component: {fileID: 2059028236}
+  - component: {fileID: 2059028235}
   m_Layer: 0
   m_Name: FadeImage
   m_TagString: Untagged
@@ -1362,7 +1365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1387,6 +1390,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2059028231}
   m_CullTransparentMesh: 1
+--- !u!114 &2059028235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059028231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecc8c9959b884cabb56975adadec5d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeGroup: {fileID: 2059028236}
+--- !u!225 &2059028236
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059028231}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2114846013
 GameObject:
   m_ObjectHideFlags: 0
