@@ -1,4 +1,5 @@
 using System.Xml;
+using System.Xml.Linq;
 
 namespace UI.Utils
 {
@@ -32,6 +33,23 @@ namespace UI.Utils
             }
 
             return defaultValue;
+        }
+
+        public static string GetStringAttribute(XElement element, string attrName)
+        {
+            return HasAttribute(element, attrName)
+                ? element.Attribute(attrName)!.Value
+                : string.Empty;
+        }
+
+        public static bool HasChild(XElement element, string childName)
+        {
+            return element.Element(childName) != null;
+        }
+
+        public static bool HasAttribute(XElement element, string attributeName)
+        {
+            return element.Attribute(attributeName) != null;
         }
     }
 }
