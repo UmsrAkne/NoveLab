@@ -8,10 +8,8 @@ namespace Loaders
 {
     public class ScenarioLoader
     {
-        public List<ScenarioEntry> Load(string xmlFilePath)
+        public List<ScenarioEntry> Load(XDocument doc)
         {
-            var doc = XDocument.Load(xmlFilePath);
-
             var elementParsers = new List<IXElementParser>
             {
                 new TextElementParser(),
@@ -23,6 +21,11 @@ namespace Loaders
                 elementParsers.ForEach(p => p.PopulateScenario(x, scenarioEntry));
                 return scenarioEntry;
             }).ToList();
+        }
+
+        public List<ScenarioEntry> Load(string xmlFilePath)
+        {
+            return Load(XDocument.Load(xmlFilePath));
         }
     }
 }
