@@ -6,6 +6,7 @@ using UI.Adapters;
 using UI.Controllers;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Scenes.Loading;
 using Scenes.Scenario;
 using UI.Animations;
 using UnityEngine.SceneManagement;
@@ -94,7 +95,7 @@ namespace Scenes.Selection
             if (index >= 0)
             {
                 var path = Directory.GetParent(Directory.GetParent(imagePaths[index])!.FullName);
-                ScenarioManager.GlobalScenarioContext.ScenarioDirectoryPath = path?.FullName;
+                LoadingManager.GlobalScenarioContext.ScenarioDirectoryPath = path?.FullName;
 
                 await sceneFader.FadeOut(2f);
                 SceneManager.LoadScene("LoadingScene");
