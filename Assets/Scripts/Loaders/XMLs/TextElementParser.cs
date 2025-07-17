@@ -13,7 +13,8 @@ namespace Loaders.XMLs
                 return;
             }
 
-            var text = XmlHelper.GetStringAttribute(scenarioElement, "string");
+            var textElement = scenarioElement.Element("text");
+            var text = XmlHelper.GetStringAttribute(textElement, "string");
             if (!string.IsNullOrWhiteSpace(text))
             {
                 scenario.Text = text;
