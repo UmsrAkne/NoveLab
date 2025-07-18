@@ -1,4 +1,18 @@
 {
-	"name": "Scenes.Loading",
-	"references":[ "GUID:7163706cc9e771143a52c9c3f2508b87", "GUID:c663e7a176411c24abab6c66a708d4f2" ]
+    "name": "Scenes.Loading",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7163706cc9e771143a52c9c3f2508b87",
+        "GUID:c663e7a176411c24abab6c66a708d4f2",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
