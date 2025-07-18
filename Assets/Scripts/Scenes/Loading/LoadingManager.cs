@@ -20,9 +20,9 @@ namespace Scenes.Loading
 
             if (string.IsNullOrWhiteSpace(path) || !File.Exists(scenarioFilePath))
             {
-                errorMessageText.text += "scenario.xml が見つかりません。\n";
-                errorMessageText.text += $"scenario directory path: {path}\n";
-                errorMessageText.text += $"scenario file path: {scenarioFilePath}\n";
+                AppendMessageLine("scenario.xml が見つかりません。");
+                AppendMessageLine($"scenario directory path: {path}");
+                AppendMessageLine($"scenario file path: {scenarioFilePath}");
                 return;
             }
 
@@ -30,17 +30,22 @@ namespace Scenes.Loading
             try
             {
                 GlobalScenarioContext.Scenarios = scenarioLoader.Load(scenarioFilePath);
-                errorMessageText.text = "scenario.xml の読み込みに成功しました。";
+                AppendMessageLine("scenario.xml の読み込みに成功しました。");
             }
             catch (XmlException e)
             {
-                errorMessageText.text += $"Error:\n";
-                errorMessageText.text += $"Line number: {e.LineNumber}\n";
-                errorMessageText.text = e.Message;
+                AppendMessageLine("Error:");
+                AppendMessageLine($"Line number: {e.LineNumber}");
+                AppendMessageLine(e.Message);
                 throw;
             }
 
             GlobalScenarioContext.IsLoaded = true;
+        }
+
+        private void AppendMessageLine(string msg)
+        {
+            errorMessageText.text += msg + "\n";
         }
     }
 }
