@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "Loaders",
         "UI.TypeWriter",
-        "Core"
+        "Core",
+        "UI.Images"
     ],
     "includePlatforms": [
         "Editor"
