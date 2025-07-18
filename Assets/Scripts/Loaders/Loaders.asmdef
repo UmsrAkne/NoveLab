@@ -2,6 +2,7 @@
 	"name": "Loaders",
 	"references": [
 		"UniTask",
-		"Core"
+		"Core",
+		"UI.Images"
 	]
 }
