@@ -1,3 +1,4 @@
+using System.IO;
 using System.Xml;
 using Core;
 using Loaders;
@@ -14,8 +15,18 @@ namespace Scenes.Loading
 
         private void Start()
         {
+            var path = GlobalScenarioContext.ScenarioDirectoryPath;
+            var scenarioFilePath = $"{path}/texts/scenario.xml";
+
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(scenarioFilePath))
+            {
+                errorMessageText.text += "scenario.xml が見つかりません。\n";
+                errorMessageText.text += $"scenario directory path: {path}\n";
+                errorMessageText.text += $"scenario file path: {scenarioFilePath}\n";
+                return;
+            }
+
             var scenarioLoader = new ScenarioLoader();
-            var scenarioFilePath = $"{GlobalScenarioContext.ScenarioDirectoryPath}/texts/scenario.xml";
             try
             {
                 GlobalScenarioContext.Scenarios = scenarioLoader.Load(scenarioFilePath);
