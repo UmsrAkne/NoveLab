@@ -1,33 +1,32 @@
 using System.Collections.Generic;
-using Core;
 
-namespace UI.Images
+namespace Core
 {
-    public class ImageOrder : IImageOrder
+    public interface IImageOrder
     {
-        public List<string> ImageNames { get; set; } = new (4);
+        public List<string> ImageNames { get; set; }
 
         /// <summary>
         /// この命令が、画像の上書きか、新規レイヤーの追加かを表します。
         /// </summary>
         public bool IsOverwrite { get; set; }
 
-        public float X { get; set; } = 0;
+        public float X { get; set; }
 
-        public float Y { get; set; } = 0;
+        public float Y { get; set; }
 
-        public float Scale { get; set; } = 1.0f;
+        public float Scale { get; set; }
 
         /// <summary>
         /// 画像の描画開始を指定秒数遅らせます。
         /// </summary>
-        public float Delay { get; set; } = 0f;
+        public float Delay { get; set; }
 
         /// <summary>
         /// 画像の描画に要する時間を秒で指定します。
         /// </summary>
-        public float Duration { get; set; } = 1.0f;
+        public float Duration { get; set; }
 
-        public int TargetLayerIndex { get; set; } = 0;
+        public int TargetLayerIndex { get; set; }
     }
 }

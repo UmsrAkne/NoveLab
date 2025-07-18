@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using UI.Images;
+using Core;
 
 namespace Scenes.Scenario
 {
@@ -7,6 +7,6 @@ namespace Scenes.Scenario
     {
         public string Text { get; set; }
 
-        public List<ImageOrder> ImageOrders { get; set; } = new ();
+        public List<IImageOrder> ImageOrders { get; set; } = new ();
     }
 }
