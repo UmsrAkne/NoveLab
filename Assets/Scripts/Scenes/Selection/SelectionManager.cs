@@ -7,7 +7,6 @@ using UI.Controllers;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Scenes.Loading;
-using Scenes.Scenario;
 using UI.Animations;
 using UnityEngine.SceneManagement;
 
