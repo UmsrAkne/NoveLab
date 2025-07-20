@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Core;
 
-namespace Scenes.Scenario
+namespace Core
 {
     public class ScenarioEntry
     {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Core;
 using Loaders.XMLs;
-using Scenes.Scenario;
 
 namespace Loaders
 {
