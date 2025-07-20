@@ -7,7 +7,6 @@ using UI.Controllers;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Scenes.Loading;
-using Scenes.Scenario;
 using UI.Animations;
 using UnityEngine.SceneManagement;
 
@@ -122,16 +121,16 @@ namespace Scenes.Selection
             var exeDir = Path.GetDirectoryName(Application.dataPath) ?? string.Empty;
             var scenarioDirectory = Path.Combine(exeDir, "scenes");
 
-            var imagePaths = new List<string>();
+            var paths = new List<string>();
             var scenarioDirectories = Directory.GetDirectories(scenarioDirectory);
 
             foreach (var directory in scenarioDirectories)
             {
                 var imageDir = Path.Combine(directory, "images");
-                imagePaths.Add(Directory.GetFiles(imageDir).FirstOrDefault());
+                paths.Add(Directory.GetFiles(imageDir).FirstOrDefault());
             }
 
-            return imagePaths.Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
+            return paths.Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
         }
     }
 }

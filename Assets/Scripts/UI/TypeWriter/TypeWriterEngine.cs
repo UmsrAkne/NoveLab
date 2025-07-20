@@ -1,4 +1,4 @@
-using Scenes.Scenario;
+using Core;
 
 namespace UI.TypeWriter
 {

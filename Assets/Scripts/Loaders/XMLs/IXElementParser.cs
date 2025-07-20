@@ -1,5 +1,5 @@
 using System.Xml.Linq;
-using Scenes.Scenario;
+using Core;
 
 namespace Loaders.XMLs
 {

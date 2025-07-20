@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using Core;
 using Loaders.XMLs;
 using NUnit.Framework;
-using Scenes.Scenario;
 
 namespace Tests.EditMode.Loaders.XMLs
 {
