@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Core
+namespace ScenarioModel
 {
     public class ScenarioEntry
     {
         public string Text { get; set; }
 
-        public List<IImageOrder> ImageOrders { get; set; } = new ();
+        public List<ImageOrder> ImageOrders { get; set; } = new ();
     }
 }
