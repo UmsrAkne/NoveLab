@@ -3,6 +3,7 @@ using Audio;
 using Core;
 using Cysharp.Threading.Tasks;
 using Loaders;
+using ScenarioModel;
 using TMPro;
 using UI.Controllers;
 using UI.Images;

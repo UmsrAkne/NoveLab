@@ -1,6 +1,5 @@
 using System.Xml.Linq;
-using Core;
-using UI.Images;
+using ScenarioModel;
 using UI.Utils;
 
 namespace Loaders.XMLs

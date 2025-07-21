@@ -3,6 +3,7 @@
 	"references": [
 		"UniTask",
 		"Core",
-		"UI.Images"
+		"UI.Images",
+		"ScenarioModel"
 	]
 }
