@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Audio
+namespace ScenarioModel
 {
     public class AudioOrder
     {
