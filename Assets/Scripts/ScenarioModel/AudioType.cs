@@ -1,4 +1,4 @@
-namespace Audio
+namespace ScenarioModel
 {
     public enum AudioType
     {

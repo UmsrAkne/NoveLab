@@ -2,7 +2,9 @@ using System.IO;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Loaders;
+using ScenarioModel;
 using UnityEngine;
+using AudioType = ScenarioModel.AudioType;
 
 namespace Audio
 {
