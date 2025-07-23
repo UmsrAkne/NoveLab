@@ -4,7 +4,7 @@ using UI.Utils;
 
 namespace Loaders.XMLs
 {
-    public class ImageElementParser
+    public class ImageElementParser : IXElementParser
     {
         public void PopulateScenario(XElement scenarioElement, ScenarioEntry scenario)
         {

@@ -4,7 +4,7 @@ using UI.Utils;
 
 namespace Loaders.XMLs
 {
-    public class VoiceElementParser
+    public class VoiceElementParser : IXElementParser
     {
         public void PopulateScenario(XElement scenarioElement, ScenarioEntry scenario)
         {
