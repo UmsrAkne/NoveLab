@@ -13,6 +13,10 @@ namespace Loaders
             var elementParsers = new List<IXElementParser>
             {
                 new TextElementParser(),
+                new ImageElementParser(),
+                new VoiceElementParser(),
+                new SeElementParser(),
+                new BgvElementParser(),
             };
 
             return doc.Root?.Elements("scenario").Select(x =>

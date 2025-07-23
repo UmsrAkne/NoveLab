@@ -6,7 +6,7 @@ using UI.Utils;
 
 namespace Loaders.XMLs
 {
-    public class BgvElementParser
+    public class BgvElementParser : IXElementParser
     {
         public void PopulateScenario(XElement scenarioElement, ScenarioEntry scenario)
         {
