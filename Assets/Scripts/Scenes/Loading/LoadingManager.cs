@@ -17,6 +17,7 @@ namespace Scenes.Loading
         {
             var path = GlobalScenarioContext.ScenarioDirectoryPath;
             var scenarioFilePath = $"{path}/texts/scenario.xml";
+            var settingFilePath = $"{path}/texts/settings.xml";
 
             if (string.IsNullOrWhiteSpace(path) || !File.Exists(scenarioFilePath))
             {
@@ -24,6 +25,26 @@ namespace Scenes.Loading
                 AppendMessageLine($"scenario directory path: {path}");
                 AppendMessageLine($"scenario file path: {scenarioFilePath}");
                 return;
+            }
+
+            if (!File.Exists(settingFilePath))
+            {
+                AppendMessageLine("setting.xml が見つかりません。");
+                return;
+            }
+
+            var settingLoader = new SettingLoader();
+            try
+            {
+                GlobalScenarioContext.SceneSetting = settingLoader.Load(settingFilePath);
+                AppendMessageLine("setting.xml の読み込みに成功しました");
+            }
+            catch (XmlException e)
+            {
+                AppendMessageLine("Error:");
+                AppendMessageLine($"Line number: {e.LineNumber}");
+                AppendMessageLine(e.Message);
+                throw;
             }
 
             var scenarioLoader = new ScenarioLoader();
