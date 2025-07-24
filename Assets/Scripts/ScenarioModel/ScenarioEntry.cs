@@ -13,5 +13,7 @@ namespace ScenarioModel
         public List<AudioOrder> SeOrders { get; set; } = new ();
 
         public List<AudioOrder> BgvOrders { get; set; } = new ();
+
+        public AudioOrder BgmOrder { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace Loaders
                 new VoiceElementParser(),
                 new SeElementParser(),
                 new BgvElementParser(),
+                new BgmElementParser(),
             };
 
             return doc.Root?.Elements("scenario").Select(x =>
