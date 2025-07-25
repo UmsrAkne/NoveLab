@@ -10,6 +10,8 @@ namespace Core
 
         void Stop();
 
+        string GroupId { get; set; }
+
         event Action OnCompleted;
     }
 }
