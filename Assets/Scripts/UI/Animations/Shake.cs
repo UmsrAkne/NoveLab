@@ -47,6 +47,8 @@ namespace UI.Animations
             IsPlaying = false;
         }
 
+        public string GroupId { get; set; }
+
         private async UniTaskVoid Run(CancellationToken token)
         {
             IsPlaying = true;

@@ -8,7 +8,9 @@
         "UI.TypeWriter",
         "Core",
         "UI.Images",
-        "ScenarioModel"
+        "ScenarioModel",
+        "UI.Animations",
+        "UniTask"
     ],
     "includePlatforms": [
         "Editor"
