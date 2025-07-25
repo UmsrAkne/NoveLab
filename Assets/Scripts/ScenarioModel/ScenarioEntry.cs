@@ -15,5 +15,7 @@ namespace ScenarioModel
         public List<AudioOrder> BgvOrders { get; set; } = new ();
 
         public AudioOrder BgmOrder { get; set; }
+
+        public Chapter Chapter { get; set; }
     }
 }
