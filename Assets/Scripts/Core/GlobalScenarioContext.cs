@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ScenarioModel;
+using UnityEngine;
 
 namespace Core
 {
@@ -12,5 +13,7 @@ namespace Core
         public List<ScenarioEntry> Scenarios { get; set; } = new ();
 
         public bool IsLoaded { get; set; }
+
+        public List<AudioClip> Voices { get; set; } = new();
     }
 }

@@ -1,6 +1,7 @@
 using System.IO;
 using System.Xml;
 using Core;
+using Cysharp.Threading.Tasks;
 using Loaders;
 using TMPro;
 using UnityEngine;
@@ -13,7 +14,9 @@ namespace Scenes.Loading
 
         [SerializeField] private TextMeshProUGUI errorMessageText;
 
-        private void Start()
+        [SerializeField] private AudioLoader audioLoader;
+
+        private async void Start()
         {
             var path = GlobalScenarioContext.ScenarioDirectoryPath;
             var scenarioFilePath = $"{path}/texts/scenario.xml";
@@ -61,12 +64,27 @@ namespace Scenes.Loading
                 throw;
             }
 
+            if (!GlobalScenarioContext.IsLoaded)
+            {
+                await LoadVoices();
+            }
+
             GlobalScenarioContext.IsLoaded = true;
         }
 
         private void AppendMessageLine(string msg)
         {
             errorMessageText.text += msg + "\n";
+        }
+
+        private async UniTask LoadVoices()
+        {
+            var voiceFiles = Directory.GetFiles($"{GlobalScenarioContext.ScenarioDirectoryPath}/voices", "*.ogg") ;
+            foreach (var vf in voiceFiles)
+            {
+                var a = await audioLoader.LoadAudioClipAsync(vf);
+                GlobalScenarioContext.Voices.Add(a);
+            }
         }
     }
 }
