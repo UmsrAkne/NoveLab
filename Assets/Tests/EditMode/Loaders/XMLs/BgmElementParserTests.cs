@@ -10,7 +10,7 @@ namespace Tests.EditMode.Loaders.XMLs
     public class BgmElementParserTests
     {
         [Test]
-        public void ParseSeElement()
+        public void ParseBgmElement()
         {
             var xml = "<root>"
                       + "<scenario>"
