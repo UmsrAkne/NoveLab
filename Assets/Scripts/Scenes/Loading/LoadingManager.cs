@@ -21,7 +21,7 @@ namespace Scenes.Loading
         {
             var path = GlobalScenarioContext.ScenarioDirectoryPath;
             var scenarioFilePath = $"{path}/texts/scenario.xml";
-            var settingFilePath = $"{path}/texts/settings.xml";
+            var settingFilePath = $"{path}/texts/setting.xml";
 
             if (string.IsNullOrWhiteSpace(path) || !File.Exists(scenarioFilePath))
             {
