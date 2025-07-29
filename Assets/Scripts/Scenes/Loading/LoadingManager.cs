@@ -20,6 +20,13 @@ namespace Scenes.Loading
         private async void Start()
         {
             var path = GlobalScenarioContext.ScenarioDirectoryPath;
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                Debug.Log("シナリオディレクトリのパスが設定されていません。デバッグ用のシーンを設定します。");
+                path = Path.Combine(new DirectoryInfo("scenes").FullName, "99999999_9999");
+                GlobalScenarioContext.ScenarioDirectoryPath = path;
+            }
+
             var scenarioFilePath = $"{path}/texts/scenario.xml";
             var settingFilePath = $"{path}/texts/setting.xml";
 
