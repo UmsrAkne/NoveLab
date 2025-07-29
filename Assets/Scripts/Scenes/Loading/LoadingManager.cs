@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using Loaders;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Scenes.Loading
 {
@@ -16,15 +17,25 @@ namespace Scenes.Loading
 
         [SerializeField] private AudioLoader audioLoader;
 
+        private readonly string scenarioFileName = "scenario.xml";
+        private readonly string settingFileName = "setting.xml";
+
         private async void Start()
         {
             var path = GlobalScenarioContext.ScenarioDirectoryPath;
-            var scenarioFilePath = $"{path}/texts/scenario.xml";
-            var settingFilePath = $"{path}/texts/settings.xml";
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                Debug.Log("シナリオディレクトリのパスが設定されていません。デバッグ用のシーンを設定します。");
+                path = Path.Combine(new DirectoryInfo("scenes").FullName, "99999999_9999");
+                GlobalScenarioContext.ScenarioDirectoryPath = path;
+            }
+
+            var scenarioFilePath = $"{path}/texts/{scenarioFileName}";
+            var settingFilePath = $"{path}/texts/{settingFileName}";
 
             if (string.IsNullOrWhiteSpace(path) || !File.Exists(scenarioFilePath))
             {
-                AppendMessageLine("scenario.xml が見つかりません。");
+                AppendMessageLine($"{scenarioFileName} が見つかりません。");
                 AppendMessageLine($"scenario directory path: {path}");
                 AppendMessageLine($"scenario file path: {scenarioFilePath}");
                 return;
@@ -32,7 +43,7 @@ namespace Scenes.Loading
 
             if (!File.Exists(settingFilePath))
             {
-                AppendMessageLine("setting.xml が見つかりません。");
+                AppendMessageLine($"{settingFileName} が見つかりません。");
                 return;
             }
 
@@ -40,7 +51,7 @@ namespace Scenes.Loading
             try
             {
                 GlobalScenarioContext.SceneSetting = settingLoader.Load(settingFilePath);
-                AppendMessageLine("setting.xml の読み込みに成功しました");
+                AppendMessageLine($"{settingFileName} の読み込みに成功しました");
             }
             catch (XmlException e)
             {
@@ -54,7 +65,7 @@ namespace Scenes.Loading
             try
             {
                 GlobalScenarioContext.Scenarios = scenarioLoader.Load(scenarioFilePath);
-                AppendMessageLine("scenario.xml の読み込みに成功しました。");
+                AppendMessageLine($"{scenarioFileName} の読み込みに成功しました。");
             }
             catch (XmlException e)
             {
@@ -70,6 +81,7 @@ namespace Scenes.Loading
             }
 
             GlobalScenarioContext.IsLoaded = true;
+            SceneManager.LoadScene("ScenarioScene");
         }
 
         private void AppendMessageLine(string msg)
