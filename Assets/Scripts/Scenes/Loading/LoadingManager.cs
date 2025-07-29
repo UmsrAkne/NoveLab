@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using Loaders;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Scenes.Loading
 {
@@ -70,6 +71,7 @@ namespace Scenes.Loading
             }
 
             GlobalScenarioContext.IsLoaded = true;
+            SceneManager.LoadScene("ScenarioScene");
         }
 
         private void AppendMessageLine(string msg)
