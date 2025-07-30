@@ -6,6 +6,7 @@ using Loaders;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Utils;
 
 namespace Scenes.Loading
 {
@@ -96,7 +97,7 @@ namespace Scenes.Loading
             {
                 var a = await audioLoader.LoadAudioClipAsync(vf);
 
-                var fullName = vf;
+                var fullName = PathNormalizer.NormalizeFilePath(vf);
                 var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
                 var fileName = Path.GetFileName(fullName);
 
