@@ -6,6 +6,7 @@ using Loaders;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Utils;
 
 namespace Scenes.Loading
 {
@@ -95,7 +96,14 @@ namespace Scenes.Loading
             foreach (var vf in voiceFiles)
             {
                 var a = await audioLoader.LoadAudioClipAsync(vf);
-                GlobalScenarioContext.Voices.Add(a);
+
+                var fullName = PathNormalizer.NormalizeFilePath(vf);
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
+                var fileName = Path.GetFileName(fullName);
+
+                GlobalScenarioContext.Voices.TryAdd(vf, a);
+                GlobalScenarioContext.Voices.TryAdd(fileNameWithoutExtension, a);
+                GlobalScenarioContext.Voices.TryAdd(fileName, a);
             }
         }
     }
