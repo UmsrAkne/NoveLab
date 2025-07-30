@@ -95,7 +95,14 @@ namespace Scenes.Loading
             foreach (var vf in voiceFiles)
             {
                 var a = await audioLoader.LoadAudioClipAsync(vf);
-                GlobalScenarioContext.Voices.Add(a);
+
+                var fullName = vf;
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
+                var fileName = Path.GetFileName(fullName);
+
+                GlobalScenarioContext.Voices.TryAdd(vf, a);
+                GlobalScenarioContext.Voices.TryAdd(fileNameWithoutExtension, a);
+                GlobalScenarioContext.Voices.TryAdd(fileName, a);
             }
         }
     }

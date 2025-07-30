@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ScenarioModel;
 using UnityEngine;
@@ -14,6 +15,6 @@ namespace Core
 
         public bool IsLoaded { get; set; }
 
-        public List<AudioClip> Voices { get; set; } = new();
+        public Dictionary<string, AudioClip> Voices { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     }
 }
