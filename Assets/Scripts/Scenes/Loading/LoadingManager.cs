@@ -78,7 +78,9 @@ namespace Scenes.Loading
 
             if (!GlobalScenarioContext.IsLoaded)
             {
-                await LoadVoices();
+                var voiceTask = LoadVoices();
+                var imageTask = LoadImages();
+                await UniTask.WhenAll(voiceTask, imageTask);
             }
 
             GlobalScenarioContext.IsLoaded = true;
@@ -104,6 +106,23 @@ namespace Scenes.Loading
                 GlobalScenarioContext.Voices.TryAdd(vf, a);
                 GlobalScenarioContext.Voices.TryAdd(fileNameWithoutExtension, a);
                 GlobalScenarioContext.Voices.TryAdd(fileName, a);
+            }
+        }
+
+        private async UniTask LoadImages()
+        {
+            var imageFiles = Directory.GetFiles($"{GlobalScenarioContext.ScenarioDirectoryPath}/images", "*.png") ;
+            foreach (var f in imageFiles)
+            {
+                var texture = await ImageLoader.LoadTexture(f);
+
+                var fullName = PathNormalizer.NormalizeFilePath(f);
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
+                var fileName = Path.GetFileName(fullName);
+
+                GlobalScenarioContext.Images.TryAdd(f, texture);
+                GlobalScenarioContext.Images.TryAdd(fileNameWithoutExtension, texture);
+                GlobalScenarioContext.Images.TryAdd(fileName, texture);
             }
         }
     }
