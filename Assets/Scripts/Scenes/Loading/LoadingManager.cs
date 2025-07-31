@@ -18,6 +18,8 @@ namespace Scenes.Loading
 
         [SerializeField] private AudioLoader audioLoader;
 
+        [SerializeField] private LogDumper logDumper;
+
         private readonly string scenarioFileName = "scenario.xml";
         private readonly string settingFileName = "setting.xml";
 
@@ -94,6 +96,7 @@ namespace Scenes.Loading
 
         private async UniTask LoadVoices()
         {
+            logDumper.Log("Voice ファイルのロードを開始します。");
             var voiceFiles = Directory.GetFiles($"{GlobalScenarioContext.ScenarioDirectoryPath}/voices", "*.ogg") ;
             foreach (var vf in voiceFiles)
             {
@@ -106,11 +109,16 @@ namespace Scenes.Loading
                 GlobalScenarioContext.Voices.TryAdd(vf, a);
                 GlobalScenarioContext.Voices.TryAdd(fileNameWithoutExtension, a);
                 GlobalScenarioContext.Voices.TryAdd(fileName, a);
+
+                logDumper.Log($"{fullName} をロードしました。");
             }
+
+            logDumper.Log($"Voice ファイルのロードが完了しました。({voiceFiles.Length} 件)");
         }
 
         private async UniTask LoadImages()
         {
+            logDumper.Log("Image ファイルのロードを開始します。");
             var imageFiles = Directory.GetFiles($"{GlobalScenarioContext.ScenarioDirectoryPath}/images", "*.png") ;
             foreach (var f in imageFiles)
             {
@@ -123,7 +131,11 @@ namespace Scenes.Loading
                 GlobalScenarioContext.Images.TryAdd(f, texture);
                 GlobalScenarioContext.Images.TryAdd(fileNameWithoutExtension, texture);
                 GlobalScenarioContext.Images.TryAdd(fileName, texture);
+
+                logDumper.Log($"{fullName} をロードしました。");
             }
+
+            logDumper.Log($"Image ファイルのロードが完了しました。({imageFiles.Length} 件)");
         }
     }
 }
