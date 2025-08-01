@@ -16,5 +16,7 @@ namespace Core
         public bool IsLoaded { get; set; }
 
         public Dictionary<string, AudioClip> Voices { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+        public Dictionary<string, Texture2D> Images { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     }
 }
