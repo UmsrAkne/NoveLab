@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Xml;
 using Core;
@@ -81,8 +82,9 @@ namespace Scenes.Loading
             if (!GlobalScenarioContext.IsLoaded)
             {
                 var voiceTask = LoadVoices();
+                var bgmTask = LoadBgm();
                 var imageTask = LoadImages();
-                await UniTask.WhenAll(voiceTask, imageTask);
+                await UniTask.WhenAll(voiceTask, imageTask, bgmTask);
             }
 
             GlobalScenarioContext.IsLoaded = true;
@@ -136,6 +138,35 @@ namespace Scenes.Loading
             }
 
             logDumper.Log($"Image ファイルのロードが完了しました。({imageFiles.Length} 件)");
+        }
+
+        private async UniTask LoadBgm()
+        {
+            logDumper.Log("BGM ファイルのロードを開始します。");
+            var bgmFile = Path.Combine(new DirectoryInfo("commonResource/bgms").FullName, "bgm001.ogg");
+
+            try
+            {
+                var a = await audioLoader.LoadAudioClipAsync(bgmFile);
+
+                var fullName = PathNormalizer.NormalizeFilePath(bgmFile);
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
+                var fileName = Path.GetFileName(fullName);
+
+                GlobalScenarioContext.BGMs.TryAdd(fullName, a);
+                GlobalScenarioContext.BGMs.TryAdd(fileNameWithoutExtension, a);
+                GlobalScenarioContext.BGMs.TryAdd(fileName, a);
+
+                logDumper.Log($"{fullName} をロードしました。");
+                logDumper.Log("BGM ファイルのロードが完了しました。");
+            }
+            catch (Exception ex)
+            {
+                logDumper.Log($"BGM ファイルのロード中にエラーが発生しました: {ex.Message}");
+                logDumper.Log($"対象ファイル: {bgmFile}");
+                logDumper.Log($"スタックトレース: {ex.StackTrace}");
+                throw; // 再スローするかどうかは挙動に応じて
+            }
         }
     }
 }
