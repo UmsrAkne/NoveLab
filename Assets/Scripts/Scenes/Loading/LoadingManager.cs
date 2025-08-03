@@ -1,8 +1,12 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Core;
 using Cysharp.Threading.Tasks;
 using Loaders;
+using ScenarioModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -81,8 +85,9 @@ namespace Scenes.Loading
             if (!GlobalScenarioContext.IsLoaded)
             {
                 var voiceTask = LoadVoices();
+                var bgmTask = LoadBgm();
                 var imageTask = LoadImages();
-                await UniTask.WhenAll(voiceTask, imageTask);
+                await UniTask.WhenAll(voiceTask, imageTask, bgmTask);
             }
 
             GlobalScenarioContext.IsLoaded = true;
@@ -136,6 +141,58 @@ namespace Scenes.Loading
             }
 
             logDumper.Log($"Image ファイルのロードが完了しました。({imageFiles.Length} 件)");
+        }
+
+        private async UniTask LoadBgm()
+        {
+            logDumper.Log("BGM ファイルのロードを開始します。");
+
+            var bgmDirectoryPath = new DirectoryInfo("commonResource/bgms").FullName;
+            var bgmFileList = new List<string>();
+
+            GlobalScenarioContext.SceneSetting.BgmOrder ??= new AudioOrder();
+
+            if (GlobalScenarioContext.SceneSetting.BgmOrder.FileName == string.Empty)
+            {
+                var f = Directory.GetFiles(bgmDirectoryPath).First();
+                GlobalScenarioContext.SceneSetting.BgmOrder.FileName = Path.GetFileName(f);
+            }
+
+            bgmFileList.Add(GlobalScenarioContext.SceneSetting.BgmOrder.FileName);
+
+            var list = GlobalScenarioContext.Scenarios
+                .Where(s => s.BgmOrder != null)
+                .Select(s => s.BgmOrder.FileName);
+
+            bgmFileList.AddRange(list);
+
+            foreach (var bgmFileName in bgmFileList)
+            {
+                var fullName = PathNormalizer.NormalizeFilePath(Path.Combine(bgmDirectoryPath, bgmFileName), ".ogg");
+
+                try
+                {
+
+                    var a = await audioLoader.LoadAudioClipAsync(fullName);
+                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
+                    var fileName = Path.GetFileName(fullName);
+
+                    GlobalScenarioContext.BGMs.TryAdd(fullName, a);
+                    GlobalScenarioContext.BGMs.TryAdd(fileNameWithoutExtension, a);
+                    GlobalScenarioContext.BGMs.TryAdd(fileName, a);
+
+                    logDumper.Log($"{fullName} をロードしました。");
+                }
+                catch (Exception ex)
+                {
+                    logDumper.Log($"BGM ファイルのロード中にエラーが発生しました: {ex.Message}");
+                    logDumper.Log($"対象ファイル: {fullName}");
+                    logDumper.Log($"スタックトレース: {ex.StackTrace}");
+                    throw; // 再スローするかどうかは挙動に応じて
+                }
+            }
+
+            logDumper.Log($"BGM ファイルのロードが完了しました。({bgmFileList.Count} 件)");
         }
     }
 }
