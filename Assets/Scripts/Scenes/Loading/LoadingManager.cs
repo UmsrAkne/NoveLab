@@ -170,6 +170,12 @@ namespace Scenes.Loading
             {
                 var fullName = PathNormalizer.NormalizeFilePath(Path.Combine(bgmDirectoryPath, bgmFileName), ".ogg");
 
+                if (GlobalScenarioContext.BGMs.ContainsKey(fullName))
+                {
+                    logDumper.Log($"{fullName} は既にロード済みのためスキップします。");
+                    continue;
+                }
+                
                 try
                 {
 
