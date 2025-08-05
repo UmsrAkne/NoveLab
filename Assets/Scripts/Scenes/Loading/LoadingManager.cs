@@ -84,9 +84,30 @@ namespace Scenes.Loading
 
             if (!GlobalScenarioContext.IsLoaded)
             {
-                var voiceTask = LoadVoices();
-                var bgmTask = LoadBgm();
-                var imageTask = LoadImages();
+                var voiceTask = LoadAssets(
+                    Path.Combine(GlobalScenarioContext.ScenarioDirectoryPath, "voices"),
+                    ".ogg",
+                    s => s.VoiceOrders, // IEnumerable<IOrder>
+                    GlobalScenarioContext.Voices,
+                    async p => await audioLoader.LoadAudioClipAsync(p)
+                );
+
+                var imageTask = LoadAssets(
+                    Path.Combine(GlobalScenarioContext.ScenarioDirectoryPath, "images"),
+                    ".png",
+                    s => s.ImageOrders,
+                    GlobalScenarioContext.Images,
+                    async p => await ImageLoader.LoadTexture(p)
+                );
+
+                var bgmTask = LoadAssets(
+                    new DirectoryInfo("commonResource/bgms").FullName,
+                    ".ogg",
+                    s => new List<IOrder>() { s.BgmOrder, },
+                    GlobalScenarioContext.BGMs,
+                    async p => await audioLoader.LoadAudioClipAsync(p)
+                );
+
                 await UniTask.WhenAll(voiceTask, imageTask, bgmTask);
             }
 
@@ -99,106 +120,60 @@ namespace Scenes.Loading
             errorMessageText.text += msg + "\n";
         }
 
-        private async UniTask LoadVoices()
+        private async UniTask LoadAssets<TAsset>(
+            string resourceDirectoryPath,
+            string extension,
+            Func<ScenarioEntry, IEnumerable<IOrder>> orderSelector,
+            IDictionary<string, TAsset> targetDictionary,
+            Func<string, UniTask<TAsset>> loader)
         {
-            logDumper.Log("Voice ファイルのロードを開始します。");
-            var voiceFiles = Directory.GetFiles($"{GlobalScenarioContext.ScenarioDirectoryPath}/voices", "*.ogg") ;
-            foreach (var vf in voiceFiles)
+            var directory = new DirectoryInfo(resourceDirectoryPath);
+
+            // シナリオ上の全リソースファイル名を取得（単数/複数両対応）
+            var fileNames = GlobalScenarioContext.Scenarios
+                .SelectMany(orderSelector)
+                .Where(o => o != null)
+                .SelectMany(o => o.ResourceFileNames)
+                .Where(fn => !string.IsNullOrWhiteSpace(fn))
+                .Distinct();
+
+            var loadedCount = 0;
+
+            foreach (var fn in fileNames)
             {
-                var a = await audioLoader.LoadAudioClipAsync(vf);
+                var fullName = PathNormalizer.NormalizeFilePath(Path.Combine(directory.FullName, fn), extension);
+                logDumper.Log($"start load: {fullName}");
 
-                var fullName = PathNormalizer.NormalizeFilePath(vf);
-                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
-                var fileName = Path.GetFileName(fullName);
-
-                GlobalScenarioContext.Voices.TryAdd(vf, a);
-                GlobalScenarioContext.Voices.TryAdd(fileNameWithoutExtension, a);
-                GlobalScenarioContext.Voices.TryAdd(fileName, a);
-
-                logDumper.Log($"{fullName} をロードしました。");
-            }
-
-            logDumper.Log($"Voice ファイルのロードが完了しました。({voiceFiles.Length} 件)");
-        }
-
-        private async UniTask LoadImages()
-        {
-            logDumper.Log("Image ファイルのロードを開始します。");
-            var imageFiles = Directory.GetFiles($"{GlobalScenarioContext.ScenarioDirectoryPath}/images", "*.png") ;
-            foreach (var f in imageFiles)
-            {
-                var texture = await ImageLoader.LoadTexture(f);
-
-                var fullName = PathNormalizer.NormalizeFilePath(f);
-                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
-                var fileName = Path.GetFileName(fullName);
-
-                GlobalScenarioContext.Images.TryAdd(f, texture);
-                GlobalScenarioContext.Images.TryAdd(fileNameWithoutExtension, texture);
-                GlobalScenarioContext.Images.TryAdd(fileName, texture);
-
-                logDumper.Log($"{fullName} をロードしました。");
-            }
-
-            logDumper.Log($"Image ファイルのロードが完了しました。({imageFiles.Length} 件)");
-        }
-
-        private async UniTask LoadBgm()
-        {
-            logDumper.Log("BGM ファイルのロードを開始します。");
-
-            var bgmDirectoryPath = new DirectoryInfo("commonResource/bgms").FullName;
-            var bgmFileList = new List<string>();
-
-            GlobalScenarioContext.SceneSetting.BgmOrder ??= new AudioOrder();
-
-            if (GlobalScenarioContext.SceneSetting.BgmOrder.FileName == string.Empty)
-            {
-                var f = Directory.GetFiles(bgmDirectoryPath).First();
-                GlobalScenarioContext.SceneSetting.BgmOrder.FileName = Path.GetFileName(f);
-            }
-
-            bgmFileList.Add(GlobalScenarioContext.SceneSetting.BgmOrder.FileName);
-
-            var list = GlobalScenarioContext.Scenarios
-                .Where(s => s.BgmOrder != null)
-                .Select(s => s.BgmOrder.FileName);
-
-            bgmFileList.AddRange(list);
-
-            foreach (var bgmFileName in bgmFileList)
-            {
-                var fullName = PathNormalizer.NormalizeFilePath(Path.Combine(bgmDirectoryPath, bgmFileName), ".ogg");
-
-                if (GlobalScenarioContext.BGMs.ContainsKey(fullName))
+                if (targetDictionary.ContainsKey(fullName))
                 {
                     logDumper.Log($"{fullName} は既にロード済みのためスキップします。");
                     continue;
                 }
-                
+
                 try
                 {
+                    var asset = await loader(fullName);
 
-                    var a = await audioLoader.LoadAudioClipAsync(fullName);
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
                     var fileName = Path.GetFileName(fullName);
 
-                    GlobalScenarioContext.BGMs.TryAdd(fullName, a);
-                    GlobalScenarioContext.BGMs.TryAdd(fileNameWithoutExtension, a);
-                    GlobalScenarioContext.BGMs.TryAdd(fileName, a);
+                    targetDictionary.TryAdd(fullName, asset);
+                    targetDictionary.TryAdd(fileNameWithoutExtension, asset);
+                    targetDictionary.TryAdd(fileName, asset);
 
                     logDumper.Log($"{fullName} をロードしました。");
+                    loadedCount++;
                 }
                 catch (Exception ex)
                 {
-                    logDumper.Log($"BGM ファイルのロード中にエラーが発生しました: {ex.Message}");
+                    logDumper.Log($"ファイルのロード中にエラーが発生しました: {ex.Message}");
                     logDumper.Log($"対象ファイル: {fullName}");
                     logDumper.Log($"スタックトレース: {ex.StackTrace}");
-                    throw; // 再スローするかどうかは挙動に応じて
+                    throw;
                 }
             }
 
-            logDumper.Log($"BGM ファイルのロードが完了しました。({bgmFileList.Count} 件)");
+            logDumper.Log($"{directory.Name} ファイルのロードが完了しました。({loadedCount} 件)");
         }
     }
 }

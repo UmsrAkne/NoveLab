@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ScenarioModel
 {
-    public class ImageOrder
+    public class ImageOrder : IOrder
     {
         public List<string> ImageNames { get; set; } = new (4);
 
@@ -28,5 +28,7 @@ namespace ScenarioModel
         public float Duration { get; set; } = 1.0f;
 
         public int TargetLayerIndex { get; set; } = 0;
+
+        public List<string> ResourceFileNames => ImageNames;
     }
 }
