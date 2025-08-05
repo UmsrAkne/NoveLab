@@ -102,23 +102,53 @@ namespace Scenes.Loading
         private async UniTask LoadVoices()
         {
             logDumper.Log("Voice ファイルのロードを開始します。");
-            var voiceFiles = Directory.GetFiles($"{GlobalScenarioContext.ScenarioDirectoryPath}/voices", "*.ogg") ;
-            foreach (var vf in voiceFiles)
+
+            var voiceDirectory = new DirectoryInfo($"{GlobalScenarioContext.ScenarioDirectoryPath}/voices");
+
+            // シナリオ内で参照されている音声ファイル名だけを抽出（null/空/重複を除去）
+            var voiceFileNames = GlobalScenarioContext.Scenarios
+                .SelectMany(s => s.VoiceOrders)
+                .Where(o => o != null && !string.IsNullOrWhiteSpace(o.FileName))
+                .Select(o => o.FileName)
+                .Distinct();
+
+            var loadedCount = 0;
+
+            foreach (var fn in voiceFileNames)
             {
-                var a = await audioLoader.LoadAudioClipAsync(vf);
+                var fullName = PathNormalizer.NormalizeFilePath(Path.Combine(voiceDirectory.FullName, fn), ".ogg");
+                logDumper.Log($"start load: {fullName}");
 
-                var fullName = PathNormalizer.NormalizeFilePath(vf);
-                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
-                var fileName = Path.GetFileName(fullName);
+                // 既にロード済みならスキップ
+                if (GlobalScenarioContext.Voices.ContainsKey(fullName))
+                {
+                    logDumper.Log($"{fullName} は既にロード済みのためスキップします。");
+                    continue;
+                }
 
-                GlobalScenarioContext.Voices.TryAdd(vf, a);
-                GlobalScenarioContext.Voices.TryAdd(fileNameWithoutExtension, a);
-                GlobalScenarioContext.Voices.TryAdd(fileName, a);
+                try
+                {
+                    var a = await audioLoader.LoadAudioClipAsync(fullName);
+                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
+                    var fileName = Path.GetFileName(fullName);
 
-                logDumper.Log($"{fullName} をロードしました。");
+                    GlobalScenarioContext.Voices.TryAdd(fullName, a);
+                    GlobalScenarioContext.Voices.TryAdd(fileNameWithoutExtension, a);
+                    GlobalScenarioContext.Voices.TryAdd(fileName, a);
+
+                    logDumper.Log($"{fullName} をロードしました。");
+                    loadedCount++;
+                }
+                catch (Exception ex)
+                {
+                    logDumper.Log($"Voice ファイルのロード中にエラーが発生しました: {ex.Message}");
+                    logDumper.Log($"対象ファイル: {fullName}");
+                    logDumper.Log($"スタックトレース: {ex.StackTrace}");
+                    throw;
+                }
             }
 
-            logDumper.Log($"Voice ファイルのロードが完了しました。({voiceFiles.Length} 件)");
+            logDumper.Log($"Voice ファイルのロードが完了しました。({loadedCount} 件)");
         }
 
         private async UniTask LoadImages()
