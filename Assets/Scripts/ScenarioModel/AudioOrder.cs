@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ScenarioModel
 {
-    public class AudioOrder
+    public class AudioOrder : IOrder
     {
         public AudioType AudioType { get; set; }
 
@@ -19,5 +19,9 @@ namespace ScenarioModel
         public float Pan { get; set; } = 0f;
 
         public int RepeatCount { get; set; } = 0;
+
+        public List<string> ResourceFileNames => AudioType == AudioType.Bgv
+            ? FileNames
+            : new List<string>() { FileName, };
     }
 }
