@@ -124,23 +124,38 @@ namespace Scenes.Loading
         private async UniTask LoadImages()
         {
             logDumper.Log("Image ファイルのロードを開始します。");
-            var imageFiles = Directory.GetFiles($"{GlobalScenarioContext.ScenarioDirectoryPath}/images", "*.png") ;
-            foreach (var f in imageFiles)
-            {
-                var texture = await ImageLoader.LoadTexture(f);
+            var imageDirectory = new DirectoryInfo($"{GlobalScenarioContext.ScenarioDirectoryPath}/images");
+            var imageFileNames = GlobalScenarioContext.Scenarios
+                .SelectMany(s => s.ImageOrders)
+                .SelectMany(o => o.ImageNames)
+                .Where(n => !string.IsNullOrWhiteSpace(n))
+                .Distinct();
 
-                var fullName = PathNormalizer.NormalizeFilePath(f);
+            var loadedCount = 0;
+
+            foreach (var fn in imageFileNames)
+            {
+                var fullName = PathNormalizer.NormalizeFilePath(Path.Combine(imageDirectory.FullName, fn), ".png");
+                logDumper.Log($"start load:{fullName}");
+                if (GlobalScenarioContext.Images.ContainsKey(fullName))
+                {
+                    logDumper.Log($"{fullName} は既にロード済みのためスキップします。");
+                    continue;
+                }
+
+                var texture = await ImageLoader.LoadTexture(fullName);
                 var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
                 var fileName = Path.GetFileName(fullName);
 
-                GlobalScenarioContext.Images.TryAdd(f, texture);
+                GlobalScenarioContext.Images.TryAdd(fullName, texture);
                 GlobalScenarioContext.Images.TryAdd(fileNameWithoutExtension, texture);
                 GlobalScenarioContext.Images.TryAdd(fileName, texture);
 
                 logDumper.Log($"{fullName} をロードしました。");
+                loadedCount++;
             }
 
-            logDumper.Log($"Image ファイルのロードが完了しました。({imageFiles.Length} 件)");
+            logDumper.Log($"Image ファイルのロードが完了しました。({loadedCount} 件)");
         }
 
         private async UniTask LoadBgm()
