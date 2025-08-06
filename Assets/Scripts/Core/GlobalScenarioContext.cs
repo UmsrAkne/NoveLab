@@ -20,5 +20,9 @@ namespace Core
         public Dictionary<string, Texture2D> Images { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
         public Dictionary<string, AudioClip> BGMs { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+        public Dictionary<string, AudioClip> Ses { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+        public Dictionary<string, AudioClip> Bgvs { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     }
 }

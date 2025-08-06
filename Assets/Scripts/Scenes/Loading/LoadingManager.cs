@@ -92,12 +92,28 @@ namespace Scenes.Loading
                     async p => await audioLoader.LoadAudioClipAsync(p)
                 );
 
+                var bgvTask = LoadAssets(
+                    Path.Combine(GlobalScenarioContext.ScenarioDirectoryPath, "bgvs"),
+                    ".ogg",
+                    s => s.BgvOrders,
+                    GlobalScenarioContext.Bgvs,
+                    async p => await audioLoader.LoadAudioClipAsync(p)
+                );
+
                 var imageTask = LoadAssets(
                     Path.Combine(GlobalScenarioContext.ScenarioDirectoryPath, "images"),
                     ".png",
                     s => s.ImageOrders,
                     GlobalScenarioContext.Images,
                     async p => await ImageLoader.LoadTexture(p)
+                );
+
+                var seTask = LoadAssets(
+                    new DirectoryInfo("commonResource/ses").FullName,
+                    ".ogg",
+                    s => s.SeOrders,
+                    GlobalScenarioContext.Ses,
+                    async p => await audioLoader.LoadAudioClipAsync(p)
                 );
 
                 var bgmTask = LoadAssets(
@@ -108,7 +124,7 @@ namespace Scenes.Loading
                     async p => await audioLoader.LoadAudioClipAsync(p)
                 );
 
-                await UniTask.WhenAll(voiceTask, imageTask, bgmTask);
+                await UniTask.WhenAll(voiceTask, bgvTask, seTask, imageTask, bgmTask);
             }
 
             GlobalScenarioContext.IsLoaded = true;
