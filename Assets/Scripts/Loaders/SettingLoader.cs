@@ -1,7 +1,6 @@
 using System.Xml.Linq;
 using Loaders.XMLs;
 using ScenarioModel;
-using UI.Utils;
 
 namespace Loaders
 {
