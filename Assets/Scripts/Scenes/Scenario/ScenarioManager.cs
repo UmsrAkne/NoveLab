@@ -5,11 +5,13 @@ using Core;
 using Cysharp.Threading.Tasks;
 using Loaders;
 using ScenarioModel;
+using Scenes.Loading;
 using TMPro;
 using UI.Controllers;
 using UI.Images;
 using UI.TypeWriter;
 using UnityEngine;
+using Utils;
 
 namespace Scenes.Scenario
 {
@@ -21,6 +23,7 @@ namespace Scenes.Scenario
         private readonly List<ScenarioEntry> scenarioEntries = new ();
         private int scenarioIndex;
         private List<Texture2D> textures = new ();
+        private GlobalScenarioContext scenarioContext;
 
         [SerializeField]
         private GameObject imageSetPrefab;
@@ -37,6 +40,9 @@ namespace Scenes.Scenario
         [SerializeField]
         private AudioLoader audioLoader;
 
+        [SerializeField]
+        private LogDumper logDumper;
+
         private void Start()
         {
             audioManager.LoadDebugBgm().Forget();
@@ -46,6 +52,9 @@ namespace Scenes.Scenario
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy1 Dummy1 Dummy1 Dummy1 Dummy1 Dummy1", });
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy2 Dummy2 Dummy2 Dummy2 Dummy2 Dummy2", });
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy3 Dummy3 Dummy3 Dummy3 Dummy3 Dummy3", });
+
+            scenarioContext = LoadingManager.GlobalScenarioContext;
+            logDumper.Log($"Loaded from: {scenarioContext.ScenarioDirectoryPath}");
         }
 
         private void Awake()
