@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Audio;
 using Core;
 using Cysharp.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Scenes.Scenario
         private GameObject imageSetPrefab;
 
         [SerializeField]
-        private ImageStacker imageStacker;
+        private List<ImageStacker> imageStackers = new ();
 
         [SerializeField]
         private TextMeshProUGUI textMeshPro;
@@ -93,10 +94,10 @@ namespace Scenes.Scenario
             var i3 = await ImageLoader.LoadTexture(@"C:\Users\Public\testData\images\C0101.png");
             textures.Add(i3);
 
-            var imageSetGameObject = Instantiate(imageSetPrefab, imageStacker.transform);
+            var imageSetGameObject = Instantiate(imageSetPrefab, imageStackers.First().transform);
             var imageSet = imageSetGameObject.GetComponent<ImageSet>();
             imageSet.SetTextures(textures[0], textures[1], textures[2]);
-            imageStacker.AddImage(imageSet);
+            imageStackers.First().AddImage(imageSet);
         }
     }
 }
