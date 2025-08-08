@@ -6,11 +6,10 @@ namespace Utils
 {
     public class LogDumper : MonoBehaviour
     {
-        private string logPath;
+        private readonly string logPath = new FileInfo("debug_log.txt").FullName;
 
         private void Start()
         {
-            logPath = new FileInfo("debug_log.txt").FullName;
             Log("シーン開始。ここからログ出力を開始します。");
         }
 
