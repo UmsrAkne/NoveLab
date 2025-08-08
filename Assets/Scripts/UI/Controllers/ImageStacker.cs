@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Core;
-using UI.Animations;
 using UnityEngine;
 
 namespace UI.Controllers
@@ -26,13 +25,6 @@ namespace UI.Controllers
             imageGameObject.transform.SetAsLastSibling();
 
             activeImages.Add(newImage);
-
-            var fadeIn = new FadeIn(newImage) { Duration = 0.2f, };
-            var slide = new Slide(newImage) { Duration = 0.3f, Angle = 180f, Distance = 30f, };
-
-            newImage.RegisterAnimation(nameof(fadeIn), fadeIn);
-            newImage.RegisterAnimation(nameof(Slide), slide);
-            newImage.PlayAnimations();
 
             // 超えたら古いやつ削除
             if (activeImages.Count > maxCount)
