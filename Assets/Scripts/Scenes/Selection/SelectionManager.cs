@@ -111,9 +111,17 @@ namespace Scenes.Selection
             }
 
             var newAdapter = Instantiate(spriteAdapterPrefab);
-            var na = newAdapter.GetComponent<SpriteAdapter>();
-            na.SetTexture(adapter.GetTexture());
-            imageStacker.AddImage(na);
+            var newImage = newAdapter.GetComponent<SpriteAdapter>();
+            newImage.SetTexture(adapter.GetTexture());
+
+            var fadeIn = new FadeIn(newImage) { Duration = 0.2f, };
+            var slide = new Slide(newImage) { Duration = 0.3f, Angle = 180f, Distance = 30f, };
+
+            newImage.RegisterAnimation(nameof(fadeIn), fadeIn);
+            newImage.RegisterAnimation(nameof(Slide), slide);
+            newImage.PlayAnimations();
+
+            imageStacker.AddImage(newImage);
         }
 
         private string[] GetThumbnailPaths()

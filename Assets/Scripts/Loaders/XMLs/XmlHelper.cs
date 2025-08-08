@@ -1,6 +1,6 @@
 using System.Xml.Linq;
 
-namespace UI.Utils
+namespace Loaders.XMLs
 {
     public static class XmlHelper
     {
