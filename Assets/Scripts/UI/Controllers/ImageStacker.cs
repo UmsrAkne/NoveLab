@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UI.Controllers
 {
-    public class ImageStacker : MonoBehaviour
+    public class ImageStacker : MonoBehaviour, IImageAdder
     {
         [SerializeField]
         private int maxCount = 3;
