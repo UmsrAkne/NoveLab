@@ -17,5 +17,7 @@ namespace ScenarioModel
         public AudioOrder BgmOrder { get; set; }
 
         public Chapter Chapter { get; set; }
+
+        public List<AnimationSpec> Animations { get; set; } = new ();
     }
 }

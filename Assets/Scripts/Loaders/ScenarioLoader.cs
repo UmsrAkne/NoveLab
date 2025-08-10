@@ -19,6 +19,7 @@ namespace Loaders
                 new BgvElementParser(),
                 new BgmElementParser(),
                 new ChapterElementParser(),
+                new AnimeElementParser(),
             };
 
             return doc.Root?.Elements("scenario").Select(x =>
