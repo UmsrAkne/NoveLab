@@ -1,14 +1,17 @@
 using System.Collections.Generic;
+using System.Linq;
 using Audio;
 using Core;
 using Cysharp.Threading.Tasks;
 using Loaders;
 using ScenarioModel;
+using Scenes.Loading;
 using TMPro;
 using UI.Controllers;
 using UI.Images;
 using UI.TypeWriter;
 using UnityEngine;
+using Utils;
 
 namespace Scenes.Scenario
 {
@@ -20,12 +23,13 @@ namespace Scenes.Scenario
         private readonly List<ScenarioEntry> scenarioEntries = new ();
         private int scenarioIndex;
         private List<Texture2D> textures = new ();
+        private GlobalScenarioContext scenarioContext;
 
         [SerializeField]
         private GameObject imageSetPrefab;
 
         [SerializeField]
-        private ImageStacker imageStacker;
+        private List<ImageStacker> imageStackers = new ();
 
         [SerializeField]
         private TextMeshProUGUI textMeshPro;
@@ -36,6 +40,9 @@ namespace Scenes.Scenario
         [SerializeField]
         private AudioLoader audioLoader;
 
+        [SerializeField]
+        private LogDumper logDumper;
+
         private void Start()
         {
             audioManager.LoadDebugBgm().Forget();
@@ -45,6 +52,9 @@ namespace Scenes.Scenario
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy1 Dummy1 Dummy1 Dummy1 Dummy1 Dummy1", });
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy2 Dummy2 Dummy2 Dummy2 Dummy2 Dummy2", });
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy3 Dummy3 Dummy3 Dummy3 Dummy3 Dummy3", });
+
+            scenarioContext = LoadingManager.GlobalScenarioContext;
+            logDumper.Log($"Loaded from: {scenarioContext.ScenarioDirectoryPath}");
         }
 
         private void Awake()
@@ -93,10 +103,10 @@ namespace Scenes.Scenario
             var i3 = await ImageLoader.LoadTexture(@"C:\Users\Public\testData\images\C0101.png");
             textures.Add(i3);
 
-            var imageSetGameObject = Instantiate(imageSetPrefab, imageStacker.transform);
+            var imageSetGameObject = Instantiate(imageSetPrefab, imageStackers.First().transform);
             var imageSet = imageSetGameObject.GetComponent<ImageSet>();
             imageSet.SetTextures(textures[0], textures[1], textures[2]);
-            imageStacker.AddImage(imageSet);
+            imageStackers.First().AddImage(imageSet);
         }
     }
 }
