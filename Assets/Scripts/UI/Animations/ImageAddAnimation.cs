@@ -13,7 +13,7 @@ namespace UI.Animations
         private readonly IDisplayImage imageToAdd;
         private IUIAnimation fadeInAnimation;
 
-        public ImageAddAnimation(IImageAdder stacker, IDisplayImage image)
+        public ImageAddAnimation(IDisplayImage image, IImageAdder stacker = null)
         {
             imageStacker = stacker;
             imageToAdd = image;
