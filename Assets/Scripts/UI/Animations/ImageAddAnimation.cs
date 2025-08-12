@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Core;
+using ScenarioModel;
 
 namespace UI.Animations
 {
@@ -12,11 +14,13 @@ namespace UI.Animations
         private readonly IImageAdder imageStacker;
         private readonly IDisplayImage imageToAdd;
         private IUIAnimation fadeInAnimation;
+        private IImageSetFactory imageSetFactory;
 
-        public ImageAddAnimation(IDisplayImage image, IImageAdder stacker = null)
+        public ImageAddAnimation(IDisplayImage image, IImageAdder stacker = null, IImageSetFactory imageSetFactory = null)
         {
             imageStacker = stacker;
             imageToAdd = image;
+            this.imageSetFactory = imageSetFactory;
         }
 
         public bool IsPlaying { get; private set; }
@@ -24,6 +28,8 @@ namespace UI.Animations
         public string GroupId { get; set; }
 
         public event Action OnCompleted;
+
+        public string A { get; set; } = string.Empty;
 
         public void Start()
         {
@@ -34,8 +40,7 @@ namespace UI.Animations
 
             IsPlaying = true;
 
-            // ImageStackerのAddImageメソッドを呼び出す
-            imageStacker.AddImage(imageToAdd);
+            imageSetFactory.CreateAndAdd(imageStacker, new ImageOrder { ImageNames = new List<string> { A, }, });
 
             // 追加された画像に登録されたアニメーションを取得
             // この部分の実装はImageStackerのAddImageメソッド内で
@@ -43,8 +48,8 @@ namespace UI.Animations
             // 例：fadeInAnimation = imageToAdd.GetAnimation<FadeIn>();
 
             // 取得したアニメーションの完了イベントを購読
-            fadeInAnimation.OnCompleted += OnInternalAnimationCompleted;
-            fadeInAnimation.Start();
+            // fadeInAnimation.OnCompleted += OnInternalAnimationCompleted;
+            // fadeInAnimation.Start();
         }
 
         private void OnInternalAnimationCompleted()
