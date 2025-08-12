@@ -104,12 +104,23 @@ namespace UI.Images
 
         public void SetTextures(Texture2D baseTexture, Texture2D eyeTex, Texture2D mouthTex)
         {
-            baseImage.SetTexture(baseTexture);
-            baseImage.SetLayerIndex(0);
-            eyeA.SetTexture(eyeTex);
-            eyeA.SetLayerIndex(1);
-            mouthA.SetTexture(mouthTex);
-            mouthA.SetLayerIndex(2);
+            if (baseTexture != null)
+            {
+                baseImage.SetTexture(baseTexture);
+                baseImage.SetLayerIndex(0);
+            }
+
+            if (eyeTex != null)
+            {
+                eyeA.SetTexture(eyeTex);
+                eyeA.SetLayerIndex(1);
+            }
+
+            if (mouthTex != null)
+            {
+                mouthA.SetTexture(mouthTex);
+                mouthA.SetLayerIndex(2);
+            }
         }
 
         public void SetAlpha(float alpha)
