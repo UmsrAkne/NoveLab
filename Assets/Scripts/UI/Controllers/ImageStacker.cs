@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Core;
 using UnityEngine;
 
@@ -33,6 +34,11 @@ namespace UI.Controllers
                 Destroy(oldest.GameObject);
                 activeImages.RemoveAt(0);
             }
+        }
+
+        public IDisplayImage GetFront()
+        {
+            return activeImages.LastOrDefault();
         }
     }
 }
