@@ -7,6 +7,7 @@ using Loaders;
 using ScenarioModel;
 using Scenes.Loading;
 using TMPro;
+using UI.Animations;
 using UI.Controllers;
 using UI.Images;
 using UI.TypeWriter;
@@ -24,6 +25,9 @@ namespace Scenes.Scenario
         private int scenarioIndex;
         private List<Texture2D> textures = new ();
         private GlobalScenarioContext scenarioContext;
+        private IImageSetFactory imageSetFactory;
+        private AnimationCompiler animationCompiler;
+        private ScenarioEntry lastExecution;
 
         [SerializeField]
         private GameObject imageSetPrefab;
@@ -47,13 +51,17 @@ namespace Scenes.Scenario
         {
             audioManager.LoadDebugBgm().Forget();
             audioManager.LoadDebugVoice().Forget();
-            LoadDebugImages().Forget();
+            // LoadDebugImages().Forget();
 
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy1 Dummy1 Dummy1 Dummy1 Dummy1 Dummy1", });
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy2 Dummy2 Dummy2 Dummy2 Dummy2 Dummy2", });
             scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy3 Dummy3 Dummy3 Dummy3 Dummy3 Dummy3", });
 
             scenarioContext = LoadingManager.GlobalScenarioContext;
+            imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images);
+            animationCompiler =
+                new AnimationCompiler(imageStackers.First().GetFront(), imageStackers.First(), imageSetFactory);
+
             logDumper.Log($"Loaded from: {scenarioContext.ScenarioDirectoryPath}");
         }
 
@@ -69,6 +77,7 @@ namespace Scenes.Scenario
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 WriteText();
+                PlayAnimation();
             }
         }
 
@@ -87,6 +96,44 @@ namespace Scenes.Scenario
             else
             {
                 typewriterEngine.ShowFullText();
+            }
+        }
+
+        private void PlayAnimation()
+        {
+            if (scenarioIndex >= scenarioEntries.Count)
+            {
+                return;
+            }
+
+            var scenario = scenarioEntries[scenarioIndex];
+
+            if (scenario == lastExecution)
+            {
+                return;
+            }
+
+            lastExecution = scenario;
+
+            var animationSpec = scenarioContext.Scenarios[scenarioIndex].Animations.FirstOrDefault();
+            var a = animationCompiler.Compile(animationSpec);
+            if (a != null)
+            {
+                RegisterSmart(a);
+            }
+        }
+
+        private void RegisterSmart(IUIAnimation anim)
+        {
+            if (anim is ImageAddAnimation)
+            {
+                // ImageAddAnimation の場合だけ特殊な処理
+                anim.Start();
+            }
+            else
+            {
+                // その他の通常アニメーション
+                imageStackers.FirstOrDefault()?.GetFront()?.RegisterAnimation(anim.GetType().Name, anim);
             }
         }
 

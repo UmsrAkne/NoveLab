@@ -16,6 +16,8 @@ namespace UI.Animations
         private readonly List<IUIAnimation> animations = new ();
         private CancellationTokenSource cts;
 
+        public List<IUIAnimation> Children => animations;
+
         public bool IsPlaying { get; private set; }
 
         /// <summary>
