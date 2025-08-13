@@ -51,11 +51,6 @@ namespace Scenes.Scenario
         {
             audioManager.LoadDebugBgm().Forget();
             audioManager.LoadDebugVoice().Forget();
-            // LoadDebugImages().Forget();
-
-            scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy1 Dummy1 Dummy1 Dummy1 Dummy1 Dummy1", });
-            scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy2 Dummy2 Dummy2 Dummy2 Dummy2 Dummy2", });
-            scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy3 Dummy3 Dummy3 Dummy3 Dummy3 Dummy3", });
 
             scenarioContext = LoadingManager.GlobalScenarioContext;
             imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images);
@@ -135,25 +130,6 @@ namespace Scenes.Scenario
                 // その他の通常アニメーション
                 imageStackers.FirstOrDefault()?.GetFront()?.RegisterAnimation(anim.GetType().Name, anim);
             }
-        }
-
-        private async UniTaskVoid LoadDebugImages()
-        {
-            Debug.Log("This runs ONLY in the editor during Play mode!");
-
-            var i1 = await ImageLoader.LoadTexture(@"C:\Users\Public\testData\images\A0101.png");
-            textures.Add(i1);
-
-            var i2 = await ImageLoader.LoadTexture(@"C:\Users\Public\testData\images\B0101.png");
-            textures.Add(i2);
-
-            var i3 = await ImageLoader.LoadTexture(@"C:\Users\Public\testData\images\C0101.png");
-            textures.Add(i3);
-
-            var imageSetGameObject = Instantiate(imageSetPrefab, imageStackers.First().transform);
-            var imageSet = imageSetGameObject.GetComponent<ImageSet>();
-            imageSet.SetTextures(textures[0], textures[1], textures[2]);
-            imageStackers.First().AddImage(imageSet);
         }
     }
 }
