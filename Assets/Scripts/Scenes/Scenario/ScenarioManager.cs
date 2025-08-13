@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Audio;
 using Core;
-using Cysharp.Threading.Tasks;
 using Loaders;
 using ScenarioModel;
 using Scenes.Loading;
@@ -18,12 +17,8 @@ namespace Scenes.Scenario
 {
     public class ScenarioManager : MonoBehaviour
     {
-        public static GlobalScenarioContext GlobalScenarioContext = new ();
-
         private TypewriterEngine typewriterEngine;
-        private readonly List<ScenarioEntry> scenarioEntries = new ();
         private int scenarioIndex;
-        private List<Texture2D> textures = new ();
         private GlobalScenarioContext scenarioContext;
         private IImageSetFactory imageSetFactory;
         private AnimationCompiler animationCompiler;
@@ -78,14 +73,14 @@ namespace Scenes.Scenario
 
         private void WriteText()
         {
-            if (scenarioIndex >= scenarioEntries.Count)
+            if (scenarioIndex >= scenarioContext.Scenarios.Count)
             {
                 return;
             }
 
             if (typewriterEngine.IsFinished)
             {
-                typewriterEngine.SetText(scenarioEntries[scenarioIndex]);
+                typewriterEngine.SetText(scenarioContext.Scenarios[scenarioIndex]);
                 scenarioIndex++;
             }
             else
@@ -96,12 +91,12 @@ namespace Scenes.Scenario
 
         private void PlayAnimation()
         {
-            if (scenarioIndex >= scenarioEntries.Count)
+            if (scenarioIndex >= scenarioContext.Scenarios.Count)
             {
                 return;
             }
 
-            var scenario = scenarioEntries[scenarioIndex];
+            var scenario = scenarioContext.Scenarios[scenarioIndex];
 
             if (scenario == lastExecution)
             {
