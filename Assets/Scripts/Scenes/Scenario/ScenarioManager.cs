@@ -105,11 +105,12 @@ namespace Scenes.Scenario
 
             lastExecution = scenario;
 
-            var animationSpec = scenarioContext.Scenarios[scenarioIndex].Animations.FirstOrDefault();
-            var a = animationCompiler.Compile(animationSpec);
-            if (a != null)
+            var animations = scenario.Animations
+                .Select(spec => animationCompiler.Compile(spec)).ToList();
+
+            foreach (var uiAnimation in animations)
             {
-                RegisterSmart(a);
+                RegisterSmart(uiAnimation);
             }
         }
 
