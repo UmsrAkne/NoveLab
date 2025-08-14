@@ -113,6 +113,8 @@ namespace Tests.EditMode.UI.Animations
                 throw new System.NotImplementedException();
             }
 
+            public int SortingOrder { get; set; }
+
             public void SetBasePosition(Vector2 pos)
             {
                 throw new System.NotImplementedException();

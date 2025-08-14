@@ -10,6 +10,9 @@ namespace UI.Controllers
         [SerializeField]
         private int maxCount = 3;
 
+        [SerializeField]
+        private int baseSortingOrder;
+
         private readonly List<IDisplayImage> activeImages = new();
 
         [SerializeField]
@@ -24,6 +27,13 @@ namespace UI.Controllers
 
             // 一番手前にする
             imageGameObject.transform.SetAsLastSibling();
+
+            var localMax = activeImages
+                .Select(img => img?.SortingOrder ?? baseSortingOrder)
+                .DefaultIfEmpty(baseSortingOrder)
+                .Max();
+
+            newImage.SortingOrder = localMax + 1;
 
             activeImages.Add(newImage);
 

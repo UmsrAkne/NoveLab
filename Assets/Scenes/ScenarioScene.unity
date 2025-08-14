@@ -701,6 +701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCount: 3
+  baseSortingOrder: 40000
   imageParent: {fileID: 589267347}
 --- !u!224 &589267347
 RectTransform:
@@ -751,6 +752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCount: 3
+  baseSortingOrder: 10000
   imageParent: {fileID: 692608230}
 --- !u!224 &692608230
 RectTransform:
@@ -801,6 +803,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCount: 3
+  baseSortingOrder: 20000
   imageParent: {fileID: 917785768}
 --- !u!224 &917785768
 RectTransform:
@@ -1022,6 +1025,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCount: 3
+  baseSortingOrder: 30000
   imageParent: {fileID: 1010701536}
 --- !u!224 &1010701536
 RectTransform:
@@ -1394,6 +1398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCount: 3
+  baseSortingOrder: 0
   imageParent: {fileID: 1901221348}
 --- !u!222 &1901221350
 CanvasRenderer:
@@ -1542,6 +1547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCount: 3
+  baseSortingOrder: 0
   imageParent: {fileID: 1946247787}
 --- !u!1 &2021186646
 GameObject:
