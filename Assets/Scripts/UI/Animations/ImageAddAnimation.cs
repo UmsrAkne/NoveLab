@@ -47,9 +47,13 @@ namespace UI.Animations
             // fadeInをpublicにするか、IDisplayImageにアニメーション取得メソッドを追加する必要があるかもしれません。
             // 例：fadeInAnimation = imageToAdd.GetAnimation<FadeIn>();
 
-            // 取得したアニメーションの完了イベントを購読
-            // fadeInAnimation.OnCompleted += OnInternalAnimationCompleted;
-            // fadeInAnimation.Start();
+            fadeInAnimation = new FadeIn(imageStacker.GetFront())
+            {
+                Duration = 1.5f,
+            };
+
+            fadeInAnimation.OnCompleted += OnInternalAnimationCompleted;
+            fadeInAnimation.Start();
         }
 
         private void OnInternalAnimationCompleted()

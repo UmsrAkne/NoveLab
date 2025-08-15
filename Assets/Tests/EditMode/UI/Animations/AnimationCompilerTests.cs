@@ -132,6 +132,11 @@ namespace Tests.EditMode.UI.Animations
             {
                 throw new System.NotImplementedException();
             }
+
+            public IDisplayImage GetFront()
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 }
