@@ -29,7 +29,7 @@ namespace UI.Animations
 
         public event Action OnCompleted;
 
-        public string A { get; set; } = string.Empty;
+        public ImageOrder ImageOrder { get; set; }
 
         public void Start()
         {
@@ -40,7 +40,7 @@ namespace UI.Animations
 
             IsPlaying = true;
 
-            imageSetFactory.CreateAndAdd(imageStacker, new ImageOrder { ImageNames = new List<string> { A, }, });
+            imageSetFactory.CreateAndAdd(imageStacker, ImageOrder);
 
             // 追加された画像に登録されたアニメーションを取得
             // この部分の実装はImageStackerのAddImageメソッド内で
@@ -49,7 +49,8 @@ namespace UI.Animations
 
             fadeInAnimation = new FadeIn(imageStacker.GetFront())
             {
-                Duration = 1.5f,
+                Duration = ImageOrder.Duration,
+                Delay = ImageOrder.Delay,
             };
 
             fadeInAnimation.OnCompleted += OnInternalAnimationCompleted;

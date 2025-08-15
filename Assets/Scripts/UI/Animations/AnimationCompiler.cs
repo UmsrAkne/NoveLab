@@ -51,6 +51,13 @@ namespace UI.Animations
                 return chain;
             }
 
+            if (instance is ImageAddAnimation ia)
+            {
+                var imageOrder = new ImageOrder();
+                BindAttributes(imageOrder, spec.Attrs);
+                ia.ImageOrder = imageOrder;
+            }
+
             BindAttributes(instance, spec.Attrs);
             return instance;
         }
