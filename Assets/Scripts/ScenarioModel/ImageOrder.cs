@@ -4,7 +4,18 @@ namespace ScenarioModel
 {
     public class ImageOrder : IOrder
     {
-        public List<string> ImageNames { get; set; } = new (4);
+        private string a;
+
+        public List<string> ImageNames { get; set; } =
+            new (4) { string.Empty, string.Empty, string.Empty, string.Empty, };
+
+        public string A { get => ImageNames[0]; set => ImageNames[0] = value; }
+
+        public string B { get => ImageNames[1]; set => ImageNames[1] = value; }
+
+        public string C { get => ImageNames[2]; set => ImageNames[2] = value; }
+
+        public string D { get => ImageNames[3]; set => ImageNames[3] = value; }
 
         /// <summary>
         /// この命令が、画像の上書きか、新規レイヤーの追加かを表します。

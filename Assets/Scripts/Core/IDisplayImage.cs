@@ -16,6 +16,8 @@ namespace Core
 
         public void PlayAnimations();
 
+        public int SortingOrder { get; set; }
+
         void SetBasePosition(Vector2 pos);
 
         void SetOffsetPosition(Vector2 offset);

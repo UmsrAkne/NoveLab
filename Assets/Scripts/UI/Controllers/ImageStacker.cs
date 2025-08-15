@@ -5,10 +5,13 @@ using UnityEngine;
 
 namespace UI.Controllers
 {
-    public class ImageStacker : MonoBehaviour, IImageAdder
+    public class ImageStacker : MonoBehaviour, IImageContainer
     {
         [SerializeField]
         private int maxCount = 3;
+
+        [SerializeField]
+        private int baseSortingOrder;
 
         private readonly List<IDisplayImage> activeImages = new();
 
@@ -24,6 +27,13 @@ namespace UI.Controllers
 
             // 一番手前にする
             imageGameObject.transform.SetAsLastSibling();
+
+            var localMax = activeImages
+                .Select(img => img?.SortingOrder ?? baseSortingOrder)
+                .DefaultIfEmpty(baseSortingOrder)
+                .Max();
+
+            newImage.SortingOrder = localMax + 1;
 
             activeImages.Add(newImage);
 

@@ -14,6 +14,7 @@ namespace UI.Images
         private readonly Dictionary<string, IUIAnimation> animations = new();
         private bool isEyeAActive = true;
         private bool isMouthAActive = true;
+        private int sortingBase;
         private CancellationTokenSource fadeCts;
 
         [SerializeField]
@@ -65,6 +66,8 @@ namespace UI.Images
             eyeNew.SetLayerIndex(eyeOld.LayerIndex + 1);
             mouthNew.SetLayerIndex(mouthOld.LayerIndex + 1);
 
+            ApplySortingOrder();
+
             // 新フェード開始（キャンセル可能なように）
             var eyeFade = new FadeIn(eyeNew) { Duration = duration, };
             var mouthFade = new FadeIn(mouthNew) { Duration = duration, };
@@ -100,6 +103,7 @@ namespace UI.Images
             mouthOld.SetAlpha(0f);
             isEyeAActive = !isEyeAActive;
             isMouthAActive = !isMouthAActive;
+            ApplySortingOrder();
         }
 
         public void SetTextures(Texture2D baseTexture, Texture2D eyeTex, Texture2D mouthTex)
@@ -173,12 +177,46 @@ namespace UI.Images
             }
         }
 
+        public int SortingOrder
+        {
+            get => sortingBase;
+            set
+            {
+                if (sortingBase == value)
+                {
+                    return;
+                }
+
+                sortingBase = value;
+                ApplySortingOrder();
+            }
+        }
+
         public void SetBasePosition(Vector2 pos)
         {
         }
 
         public void SetOffsetPosition(Vector2 offset)
         {
+        }
+
+        private void ApplySortingOrder()
+        {
+            SetAdapterOrder(baseImage);
+            SetAdapterOrder(eyeA);
+            SetAdapterOrder(eyeB);
+            SetAdapterOrder(mouthA);
+            SetAdapterOrder(mouthB);
+        }
+
+        private void SetAdapterOrder(SpriteRendererAdapter adapter)
+        {
+            if (adapter == null)
+            {
+                return;
+            }
+
+            adapter.SortingOrder = sortingBase + adapter.LayerIndex;
         }
     }
 }

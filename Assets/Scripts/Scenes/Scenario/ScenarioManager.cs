@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Audio;
 using Core;
-using Cysharp.Threading.Tasks;
 using Loaders;
 using ScenarioModel;
 using Scenes.Loading;
@@ -18,12 +17,8 @@ namespace Scenes.Scenario
 {
     public class ScenarioManager : MonoBehaviour
     {
-        public static GlobalScenarioContext GlobalScenarioContext = new ();
-
         private TypewriterEngine typewriterEngine;
-        private readonly List<ScenarioEntry> scenarioEntries = new ();
         private int scenarioIndex;
-        private List<Texture2D> textures = new ();
         private GlobalScenarioContext scenarioContext;
         private IImageSetFactory imageSetFactory;
         private AnimationCompiler animationCompiler;
@@ -51,11 +46,6 @@ namespace Scenes.Scenario
         {
             audioManager.LoadDebugBgm().Forget();
             audioManager.LoadDebugVoice().Forget();
-            // LoadDebugImages().Forget();
-
-            scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy1 Dummy1 Dummy1 Dummy1 Dummy1 Dummy1", });
-            scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy2 Dummy2 Dummy2 Dummy2 Dummy2 Dummy2", });
-            scenarioEntries.Add(new ScenarioEntry() { Text = "Dummy3 Dummy3 Dummy3 Dummy3 Dummy3 Dummy3", });
 
             scenarioContext = LoadingManager.GlobalScenarioContext;
             imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images);
@@ -83,14 +73,14 @@ namespace Scenes.Scenario
 
         private void WriteText()
         {
-            if (scenarioIndex >= scenarioEntries.Count)
+            if (scenarioIndex >= scenarioContext.Scenarios.Count)
             {
                 return;
             }
 
             if (typewriterEngine.IsFinished)
             {
-                typewriterEngine.SetText(scenarioEntries[scenarioIndex]);
+                typewriterEngine.SetText(scenarioContext.Scenarios[scenarioIndex]);
                 scenarioIndex++;
             }
             else
@@ -101,12 +91,12 @@ namespace Scenes.Scenario
 
         private void PlayAnimation()
         {
-            if (scenarioIndex >= scenarioEntries.Count)
+            if (scenarioIndex >= scenarioContext.Scenarios.Count)
             {
                 return;
             }
 
-            var scenario = scenarioEntries[scenarioIndex];
+            var scenario = scenarioContext.Scenarios[scenarioIndex];
 
             if (scenario == lastExecution)
             {
@@ -115,11 +105,12 @@ namespace Scenes.Scenario
 
             lastExecution = scenario;
 
-            var animationSpec = scenarioContext.Scenarios[scenarioIndex].Animations.FirstOrDefault();
-            var a = animationCompiler.Compile(animationSpec);
-            if (a != null)
+            var animations = scenario.Animations
+                .Select(spec => animationCompiler.Compile(spec)).ToList();
+
+            foreach (var uiAnimation in animations)
             {
-                RegisterSmart(a);
+                RegisterSmart(uiAnimation);
             }
         }
 
@@ -135,25 +126,6 @@ namespace Scenes.Scenario
                 // その他の通常アニメーション
                 imageStackers.FirstOrDefault()?.GetFront()?.RegisterAnimation(anim.GetType().Name, anim);
             }
-        }
-
-        private async UniTaskVoid LoadDebugImages()
-        {
-            Debug.Log("This runs ONLY in the editor during Play mode!");
-
-            var i1 = await ImageLoader.LoadTexture(@"C:\Users\Public\testData\images\A0101.png");
-            textures.Add(i1);
-
-            var i2 = await ImageLoader.LoadTexture(@"C:\Users\Public\testData\images\B0101.png");
-            textures.Add(i2);
-
-            var i3 = await ImageLoader.LoadTexture(@"C:\Users\Public\testData\images\C0101.png");
-            textures.Add(i3);
-
-            var imageSetGameObject = Instantiate(imageSetPrefab, imageStackers.First().transform);
-            var imageSet = imageSetGameObject.GetComponent<ImageSet>();
-            imageSet.SetTextures(textures[0], textures[1], textures[2]);
-            imageStackers.First().AddImage(imageSet);
         }
     }
 }

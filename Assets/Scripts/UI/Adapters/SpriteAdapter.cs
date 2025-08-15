@@ -103,6 +103,8 @@ namespace UI.Adapters
             }
         }
 
+        public int SortingOrder { get; set; }
+
         public void SetBasePosition(Vector2 pos)
         {
             basePos = pos;

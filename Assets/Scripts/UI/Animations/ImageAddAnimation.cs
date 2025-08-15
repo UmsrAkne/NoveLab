@@ -11,12 +11,12 @@ namespace UI.Animations
 // 新しく作成するクラス
     public class ImageAddAnimation : IUIAnimation
     {
-        private readonly IImageAdder imageStacker;
+        private readonly IImageContainer imageStacker;
         private readonly IDisplayImage imageToAdd;
         private IUIAnimation fadeInAnimation;
         private IImageSetFactory imageSetFactory;
 
-        public ImageAddAnimation(IDisplayImage image, IImageAdder stacker = null, IImageSetFactory imageSetFactory = null)
+        public ImageAddAnimation(IDisplayImage image, IImageContainer stacker = null, IImageSetFactory imageSetFactory = null)
         {
             imageStacker = stacker;
             imageToAdd = image;
@@ -29,7 +29,7 @@ namespace UI.Animations
 
         public event Action OnCompleted;
 
-        public string A { get; set; } = string.Empty;
+        public ImageOrder ImageOrder { get; set; }
 
         public void Start()
         {
@@ -40,16 +40,21 @@ namespace UI.Animations
 
             IsPlaying = true;
 
-            imageSetFactory.CreateAndAdd(imageStacker, new ImageOrder { ImageNames = new List<string> { A, }, });
+            imageSetFactory.CreateAndAdd(imageStacker, ImageOrder);
 
             // 追加された画像に登録されたアニメーションを取得
             // この部分の実装はImageStackerのAddImageメソッド内で
             // fadeInをpublicにするか、IDisplayImageにアニメーション取得メソッドを追加する必要があるかもしれません。
             // 例：fadeInAnimation = imageToAdd.GetAnimation<FadeIn>();
 
-            // 取得したアニメーションの完了イベントを購読
-            // fadeInAnimation.OnCompleted += OnInternalAnimationCompleted;
-            // fadeInAnimation.Start();
+            fadeInAnimation = new FadeIn(imageStacker.GetFront())
+            {
+                Duration = ImageOrder.Duration,
+                Delay = ImageOrder.Delay,
+            };
+
+            fadeInAnimation.OnCompleted += OnInternalAnimationCompleted;
+            fadeInAnimation.Start();
         }
 
         private void OnInternalAnimationCompleted()

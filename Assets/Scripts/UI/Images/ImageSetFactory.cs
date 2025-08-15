@@ -22,7 +22,7 @@ namespace UI.Images
             this.images = images ?? throw new ArgumentNullException(nameof(images));
         }
 
-        public void CreateAndAdd(IImageAdder imageStacker, ImageOrder order)
+        public void CreateAndAdd(IImageContainer imageStacker, ImageOrder order)
         {
             var stacker = imageStacker as ImageStacker;
             if (stacker == null)

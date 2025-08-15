@@ -90,6 +90,12 @@ namespace UI.Adapters
             }
         }
 
+        public int SortingOrder
+        {
+            get => spriteRenderer.sortingOrder;
+            set => spriteRenderer.sortingOrder = value;
+        }
+
         public void SetBasePosition(Vector2 pos)
         {
             basePos = pos;
