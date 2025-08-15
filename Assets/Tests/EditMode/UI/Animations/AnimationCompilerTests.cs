@@ -14,7 +14,7 @@ namespace Tests.EditMode.UI.Animations
         [SetUp]
         public void SetUp()
         {
-            compiler = new AnimationCompiler(new DummyDisplayImage(), new DummyImageAdder());
+            compiler = new AnimationCompiler(new DummyDisplayImage(), new DummyImageContainer());
         }
 
         [Test]
@@ -126,8 +126,8 @@ namespace Tests.EditMode.UI.Animations
             }
         }
 
-        // Tests/Stubs/DummyImageAdder.cs
-        private sealed class DummyImageAdder : IImageAdder { /* メソッドは空でOK */
+        // Tests/Stubs/DummyImageContainer.cs
+        private sealed class DummyImageContainer : IImageContainer { /* メソッドは空でOK */
             public void AddImage(IDisplayImage image)
             {
                 throw new System.NotImplementedException();

@@ -13,13 +13,13 @@ namespace UI.Animations
         // name -> 生成関数（依存を渡して new）
         private readonly Dictionary<string, Func<IUIAnimation>> factories;
 
-        public AnimationCompiler(IDisplayImage displayImage, IImageAdder imageAdder, IImageSetFactory imageSetFactory = null)
+        public AnimationCompiler(IDisplayImage displayImage, IImageContainer imageContainer, IImageSetFactory imageSetFactory = null)
         {
             factories = new Dictionary<string, Func<IUIAnimation>>(StringComparer.OrdinalIgnoreCase)
             {
                 ["slide"] = () => new Slide(displayImage),
                 ["shake"] = () => new Shake(displayImage),
-                ["image"] = () => new ImageAddAnimation(displayImage,imageAdder, imageSetFactory),
+                ["image"] = () => new ImageAddAnimation(displayImage,imageContainer, imageSetFactory),
                 ["chain"] = () => new AnimationChain(),
             };
         }

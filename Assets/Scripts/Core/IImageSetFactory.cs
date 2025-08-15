@@ -4,6 +4,6 @@ namespace Core
 {
     public interface IImageSetFactory
     {
-        void CreateAndAdd(IImageAdder stacker, ImageOrder order);
+        void CreateAndAdd(IImageContainer stacker, ImageOrder order);
     }
 }

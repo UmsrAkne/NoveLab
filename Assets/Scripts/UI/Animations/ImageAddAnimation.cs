@@ -11,12 +11,12 @@ namespace UI.Animations
 // 新しく作成するクラス
     public class ImageAddAnimation : IUIAnimation
     {
-        private readonly IImageAdder imageStacker;
+        private readonly IImageContainer imageStacker;
         private readonly IDisplayImage imageToAdd;
         private IUIAnimation fadeInAnimation;
         private IImageSetFactory imageSetFactory;
 
-        public ImageAddAnimation(IDisplayImage image, IImageAdder stacker = null, IImageSetFactory imageSetFactory = null)
+        public ImageAddAnimation(IDisplayImage image, IImageContainer stacker = null, IImageSetFactory imageSetFactory = null)
         {
             imageStacker = stacker;
             imageToAdd = image;

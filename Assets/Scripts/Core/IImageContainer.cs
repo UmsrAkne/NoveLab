@@ -1,6 +1,6 @@
 namespace Core
 {
-    public interface IImageAdder
+    public interface IImageContainer
     {
         void AddImage(IDisplayImage image);
 
