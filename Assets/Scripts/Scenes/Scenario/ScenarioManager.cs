@@ -44,9 +44,6 @@ namespace Scenes.Scenario
 
         private void Start()
         {
-            audioManager.LoadDebugBgm().Forget();
-            audioManager.LoadDebugVoice().Forget();
-
             scenarioContext = LoadingManager.GlobalScenarioContext;
             imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images);
             animationCompiler =

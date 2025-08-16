@@ -59,32 +59,6 @@ namespace Audio
             // 他の AudioType に応じた処理もここに追加予定
         }
 
-        public async UniTaskVoid LoadDebugBgm()
-        {
-            var path = @"C:\Users\Public\testData\sounds\list2\music.ogg";
-            await audioLoader.LoadAudioClipAsync(path);
-            var order = new AudioOrder()
-            {
-                FileName = Path.GetFileName(path),
-                AudioType = AudioType.Bgm,
-            };
-
-            await PlayAsync(order);
-        }
-
-        public async UniTaskVoid LoadDebugVoice()
-        {
-            var path = @"C:\Users\Public\testData\sounds\list3\test_message1.ogg";
-            await audioLoader.LoadAudioClipAsync(path);
-            var order = new AudioOrder()
-            {
-                FileName = Path.GetFileName(path),
-                AudioType = AudioType.Voice,
-            };
-
-            await PlayAsync(order);
-        }
-
         private void Awake()
         {
             voicePlayer.OnPlaybackCompleted += OnVoicePlaybackCompleted;
