@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Audio;
 using Core;
+using Cysharp.Threading.Tasks;
 using Loaders;
 using ScenarioModel;
 using Scenes.Loading;
@@ -44,13 +45,12 @@ namespace Scenes.Scenario
 
         private void Start()
         {
-            audioManager.LoadDebugBgm().Forget();
-            audioManager.LoadDebugVoice().Forget();
-
             scenarioContext = LoadingManager.GlobalScenarioContext;
             imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images);
             animationCompiler =
                 new AnimationCompiler(imageStackers.First().GetFront(), imageStackers.First(), imageSetFactory);
+
+            audioManager.ScenarioContext = scenarioContext;
 
             logDumper.Log($"Loaded from: {scenarioContext.ScenarioDirectoryPath}");
         }
@@ -67,7 +67,26 @@ namespace Scenes.Scenario
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 WriteText();
-                PlayAnimation();
+
+                if (!typewriterEngine.IsFinished)
+                {
+                    PlayAnimation();
+                    PlayAudio();
+                }
+            }
+        }
+
+        private void PlayAudio()
+        {
+            if (scenarioIndex >= scenarioContext.Scenarios.Count && scenarioIndex -1 < 0)
+            {
+                return;
+            }
+
+            var scenario = scenarioContext.Scenarios[scenarioIndex -1];
+            foreach (var scenarioVoiceOrder in scenario.VoiceOrders)
+            {
+                audioManager.PlayAsync(scenarioVoiceOrder).Forget();
             }
         }
 
