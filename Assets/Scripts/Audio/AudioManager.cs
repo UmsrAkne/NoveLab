@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using Core;
 using Cysharp.Threading.Tasks;
 using Loaders;
 using ScenarioModel;
@@ -25,6 +26,8 @@ namespace Audio
         [SerializeField]
         private SePlayer sePlayer;
 
+        public GlobalScenarioContext ScenarioContext { private get; set; }
+
         public async UniTask PlayAsync(AudioOrder order)
         {
             if (order.AudioType == AudioType.Bgm)
@@ -36,7 +39,7 @@ namespace Audio
 
             if (order.AudioType == AudioType.Voice)
             {
-                var clip = audioLoader.GetCachedClip(order.FileName);
+                ScenarioContext.Voices.TryGetValue(order.FileName, out var clip);
                 await voicePlayer.PlayVoiceAsync(clip, order);
                 bgvPlayer.FadeOutVolume(order.ChannelIndex, 0, 0.25f);
             }
