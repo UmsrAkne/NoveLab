@@ -4,6 +4,7 @@ using Core;
 using Cysharp.Threading.Tasks;
 using ScenarioModel;
 using UnityEngine;
+using Utils;
 using AudioType = ScenarioModel.AudioType;
 
 namespace Audio
@@ -24,8 +25,15 @@ namespace Audio
 
         public GlobalScenarioContext ScenarioContext { private get; set; }
 
+        public LogDumper LogDumper { private get; set; }
+
         public async UniTask PlayAsync(AudioOrder order)
         {
+            if (LogDumper != null)
+            {
+                LogDumper.Log($"PlayAsync: Type:{order.AudioType} FileName: {order.FileName}");
+            }
+
             if (order.AudioType == AudioType.Bgm)
             {
                 ScenarioContext.BGMs.TryGetValue(order.FileName, out var clip);

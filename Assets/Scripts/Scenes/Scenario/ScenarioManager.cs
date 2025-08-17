@@ -51,6 +51,7 @@ namespace Scenes.Scenario
                 new AnimationCompiler(imageStackers.First().GetFront(), imageStackers.First(), imageSetFactory);
 
             audioManager.ScenarioContext = scenarioContext;
+            audioManager.LogDumper = logDumper;
 
             logDumper.Log($"Loaded from: {scenarioContext.ScenarioDirectoryPath}");
         }
