@@ -1,8 +1,7 @@
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using Core;
 using Cysharp.Threading.Tasks;
-using Loaders;
 using ScenarioModel;
 using UnityEngine;
 using AudioType = ScenarioModel.AudioType;
@@ -11,9 +10,6 @@ namespace Audio
 {
     public class AudioManager : MonoBehaviour
     {
-        [SerializeField]
-        private AudioLoader audioLoader;
-
         [SerializeField]
         private BgmPlayer bgmPlayer;
 
@@ -32,8 +28,7 @@ namespace Audio
         {
             if (order.AudioType == AudioType.Bgm)
             {
-                var clip = audioLoader.GetCachedClip(order.FileName);
-                Debug.Log("clipName = " + clip.name);
+                ScenarioContext.BGMs.TryGetValue(order.FileName, out var clip);
                 await bgmPlayer.PlayBgmAsync(clip, fadeDuration: 1f);
             }
 
@@ -46,8 +41,8 @@ namespace Audio
 
             if (order.AudioType == AudioType.Bgv)
             {
-                var clips = order.FileNames.
-                    Select(orderFileName => audioLoader.GetCachedClip(orderFileName))
+                var clips = order.FileNames
+                    .Select(n => ScenarioContext.Bgvs.GetValueOrDefault(n))
                     .ToList();
 
                 bgvPlayer.PrepareBgVoiceClips(order, clips);
@@ -55,7 +50,7 @@ namespace Audio
 
             if (order.AudioType == AudioType.Se)
             {
-                var clip = audioLoader.GetCachedClip(order.FileName);
+                ScenarioContext.Ses.TryGetValue(order.FileName, out var clip);
                 sePlayer.PlaySe(clip, order);
             }
 
