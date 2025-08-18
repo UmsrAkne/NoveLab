@@ -19,7 +19,7 @@ namespace UI.Animations
             {
                 ["slide"] = () => new Slide(displayImage),
                 ["shake"] = () => new Shake(displayImage),
-                ["image"] = () => new ImageAddAnimation(displayImage,imageContainer, imageSetFactory),
+                ["image"] = () => new ImageAddAnimation(imageContainer, imageSetFactory),
                 ["chain"] = () => new AnimationChain(),
             };
         }

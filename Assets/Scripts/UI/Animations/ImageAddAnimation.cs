@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Core;
 using ScenarioModel;
 
@@ -12,14 +11,12 @@ namespace UI.Animations
     public class ImageAddAnimation : IUIAnimation
     {
         private readonly IImageContainer imageStacker;
-        private readonly IDisplayImage imageToAdd;
         private IUIAnimation fadeInAnimation;
         private IImageSetFactory imageSetFactory;
 
-        public ImageAddAnimation(IDisplayImage image, IImageContainer stacker = null, IImageSetFactory imageSetFactory = null)
+        public ImageAddAnimation(IImageContainer stacker = null, IImageSetFactory imageSetFactory = null)
         {
             imageStacker = stacker;
-            imageToAdd = image;
             this.imageSetFactory = imageSetFactory;
         }
 
@@ -45,7 +42,6 @@ namespace UI.Animations
             // 追加された画像に登録されたアニメーションを取得
             // この部分の実装はImageStackerのAddImageメソッド内で
             // fadeInをpublicにするか、IDisplayImageにアニメーション取得メソッドを追加する必要があるかもしれません。
-            // 例：fadeInAnimation = imageToAdd.GetAnimation<FadeIn>();
 
             fadeInAnimation = new FadeIn(imageStacker.GetFront())
             {
