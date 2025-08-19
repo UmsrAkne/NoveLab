@@ -145,6 +145,7 @@ namespace Scenes.Scenario
             {
                 // その他の通常アニメーション
                 imageStackers.FirstOrDefault()?.GetFront()?.RegisterAnimation(anim.GetType().Name, anim);
+                anim.Start();
             }
         }
     }
