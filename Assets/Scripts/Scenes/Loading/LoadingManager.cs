@@ -108,6 +108,14 @@ namespace Scenes.Loading
                     async p => await ImageLoader.LoadTexture(p)
                 );
 
+                var animationImageTask = LoadAssets(
+                    Path.Combine(GlobalScenarioContext.ScenarioDirectoryPath, "images"),
+                    ".png",
+                    s => s.Animations,
+                    GlobalScenarioContext.Images,
+                    async p => await ImageLoader.LoadTexture(p)
+                );
+
                 var seTask = LoadAssets(
                     new DirectoryInfo("commonResource/ses").FullName,
                     ".ogg",
@@ -124,7 +132,7 @@ namespace Scenes.Loading
                     async p => await audioLoader.LoadAudioClipAsync(p)
                 );
 
-                await UniTask.WhenAll(voiceTask, bgvTask, seTask, imageTask, bgmTask);
+                await UniTask.WhenAll(voiceTask, bgvTask, seTask, imageTask, animationImageTask, bgmTask);
             }
 
             GlobalScenarioContext.IsLoaded = true;
