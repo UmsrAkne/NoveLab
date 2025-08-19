@@ -16,6 +16,8 @@ namespace UI.Images
         private bool isMouthAActive = true;
         private int sortingBase;
         private CancellationTokenSource fadeCts;
+        private Vector2 basePos;
+        private Vector2 shakeOffset;
 
         [SerializeField]
         private CanvasGroup canvasGroup;
@@ -194,10 +196,19 @@ namespace UI.Images
 
         public void SetBasePosition(Vector2 pos)
         {
+            basePos = pos;
+            UpdateFinalPosition();
         }
 
         public void SetOffsetPosition(Vector2 offset)
         {
+            shakeOffset = offset;
+            UpdateFinalPosition();
+        }
+
+        private void UpdateFinalPosition()
+        {
+            transform.localPosition = basePos + shakeOffset;
         }
 
         private void ApplySortingOrder()
