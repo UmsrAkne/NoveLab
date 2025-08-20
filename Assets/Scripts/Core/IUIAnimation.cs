@@ -12,6 +12,8 @@ namespace Core
 
         string GroupId { get; set; }
 
+        int TargetLayerIndex { get; set; }
+
         event Action OnCompleted;
     }
 }

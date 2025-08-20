@@ -24,6 +24,8 @@ namespace UI.Animations
 
         public string GroupId { get; set; }
 
+        public int TargetLayerIndex { get; set; }
+
         public event Action OnCompleted;
 
         public ImageOrder ImageOrder { get; set; }

@@ -11,6 +11,8 @@ namespace UI.Animations
         private readonly IDisplayImage image;
         private CancellationTokenSource cts;
 
+        public int TargetLayerIndex { get; set; }
+
         public event Action OnCompleted;
 
         public bool IsPlaying { get; private set; }

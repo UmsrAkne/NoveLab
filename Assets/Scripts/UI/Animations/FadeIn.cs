@@ -13,6 +13,8 @@ namespace UI.Animations
 
         public bool IsPlaying { get; private set; }
 
+        public int TargetLayerIndex { get; set; }
+
         public event Action OnCompleted;
 
         // ReSharper disable once MemberCanBePrivate.Global

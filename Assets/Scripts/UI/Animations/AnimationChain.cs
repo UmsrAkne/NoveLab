@@ -27,6 +27,8 @@ namespace UI.Animations
         /// </summary>
         public int LoopCount { get; set; } = 1;
 
+        public int TargetLayerIndex { get; set; }
+
         public event Action OnCompleted;
 
         public void Add(IUIAnimation animation)

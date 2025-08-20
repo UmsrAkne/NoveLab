@@ -144,7 +144,8 @@ namespace Scenes.Scenario
             else
             {
                 // その他の通常アニメーション
-                imageStackers.FirstOrDefault()?.GetFront()?.RegisterAnimation(anim.GetType().Name, anim);
+                var stacker = imageStackers[anim.TargetLayerIndex];
+                stacker.GetFront()?.RegisterAnimation(anim.GetType().Name, anim);
                 anim.Start();
             }
         }

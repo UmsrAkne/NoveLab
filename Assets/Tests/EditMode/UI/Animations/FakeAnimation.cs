@@ -8,6 +8,8 @@ namespace Tests.EditMode.UI.Animations
         public bool IsPlaying { get; private set; }
         public string GroupId { get; set; } = string.Empty;
 
+        public int TargetLayerIndex { get; set; }
+
         public event Action OnCompleted;
 
         public void Start()
