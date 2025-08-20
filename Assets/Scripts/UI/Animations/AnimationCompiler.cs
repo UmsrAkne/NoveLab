@@ -20,6 +20,7 @@ namespace UI.Animations
                 ["slide"] = () => new Slide(imageContainer.GetFront()),
                 ["shake"] = () => new Shake(imageContainer.GetFront()),
                 ["image"] = () => new ImageAddAnimation(imageContainer, imageSetFactory),
+                ["wait"] = () => new WaitAnimation(),
                 ["chain"] = () => new AnimationChain(),
             };
         }
