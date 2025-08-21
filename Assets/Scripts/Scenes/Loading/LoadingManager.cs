@@ -124,15 +124,19 @@ namespace Scenes.Loading
                     async p => await audioLoader.LoadAudioClipAsync(p)
                 );
 
+                var bgmDirectory = new DirectoryInfo("commonResource/bgms").FullName;
+
                 var bgmTask = LoadAssets(
-                    new DirectoryInfo("commonResource/bgms").FullName,
+                    bgmDirectory,
                     ".ogg",
                     s => new List<IOrder>() { s.BgmOrder, },
                     GlobalScenarioContext.BGMs,
                     async p => await audioLoader.LoadAudioClipAsync(p)
                 );
 
-                await UniTask.WhenAll(voiceTask, bgvTask, seTask, imageTask, animationImageTask, bgmTask);
+                var defaultBgmTask = LoadDefaultSceneBGMAsync(bgmDirectory, ".ogg");
+
+                await UniTask.WhenAll(voiceTask, bgvTask, seTask, imageTask, animationImageTask, bgmTask, defaultBgmTask);
             }
 
             GlobalScenarioContext.IsLoaded = true;
@@ -198,6 +202,21 @@ namespace Scenes.Loading
             }
 
             logDumper.Log($"{directory.Name} ファイルのロードが完了しました。({loadedCount} 件)");
+        }
+
+        private async UniTask LoadDefaultSceneBGMAsync(string directory, string extension)
+        {
+            var bgmOrder = GlobalScenarioContext.SceneSetting.BgmOrder;
+            if (bgmOrder == null || string.IsNullOrWhiteSpace(bgmOrder.FileName))
+            {
+                return;
+            }
+
+            var fullPath = PathNormalizer.NormalizeFilePath(
+                Path.Combine(directory, bgmOrder.FileName), extension);
+
+            var clip = await audioLoader.LoadAudioClipAsync(fullPath);
+            GlobalScenarioContext.BGMs.TryAdd(bgmOrder.FileName, clip);
         }
     }
 }
