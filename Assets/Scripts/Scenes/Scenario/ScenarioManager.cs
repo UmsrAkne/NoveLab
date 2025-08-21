@@ -53,6 +53,8 @@ namespace Scenes.Scenario
             audioManager.ScenarioContext = scenarioContext;
             audioManager.LogDumper = logDumper;
 
+            audioManager.PlayAsync(scenarioContext.SceneSetting.BgmOrder).Forget();
+
             logDumper.Log($"Loaded from: {scenarioContext.ScenarioDirectoryPath}");
         }
 
