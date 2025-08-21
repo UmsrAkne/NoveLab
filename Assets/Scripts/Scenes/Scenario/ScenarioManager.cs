@@ -53,6 +53,8 @@ namespace Scenes.Scenario
             audioManager.ScenarioContext = scenarioContext;
             audioManager.LogDumper = logDumper;
 
+            audioManager.PlayAsync(scenarioContext.SceneSetting.BgmOrder).Forget();
+
             logDumper.Log($"Loaded from: {scenarioContext.ScenarioDirectoryPath}");
         }
 
@@ -67,25 +69,30 @@ namespace Scenes.Scenario
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                var scenario = GetScenario();
                 WriteText();
 
                 if (!typewriterEngine.IsFinished)
                 {
-                    PlayAnimation();
-                    PlayAudio();
+                    PlayAnimation(scenario);
+                    PlayAudio(scenario);
                 }
             }
         }
 
-        private void PlayAudio()
+        private ScenarioEntry GetScenario()
         {
-            if (scenarioIndex >= scenarioContext.Scenarios.Count && scenarioIndex -1 < 0)
+            if (scenarioIndex >= scenarioContext.Scenarios.Count)
             {
-                return;
+                return null;
             }
 
-            var scenario = scenarioContext.Scenarios[scenarioIndex -1];
-            foreach (var scenarioVoiceOrder in scenario.VoiceOrders)
+            return scenarioContext.Scenarios[scenarioIndex];
+        }
+
+        private void PlayAudio(ScenarioEntry scenarioEntry)
+        {
+            foreach (var scenarioVoiceOrder in scenarioEntry.VoiceOrders)
             {
                 audioManager.PlayAsync(scenarioVoiceOrder).Forget();
             }
@@ -109,23 +116,16 @@ namespace Scenes.Scenario
             }
         }
 
-        private void PlayAnimation()
+        private void PlayAnimation(ScenarioEntry scenarioEntry)
         {
-            if (scenarioIndex >= scenarioContext.Scenarios.Count)
+            if (scenarioEntry == lastExecution)
             {
                 return;
             }
 
-            var scenario = scenarioContext.Scenarios[scenarioIndex];
+            lastExecution = scenarioEntry;
 
-            if (scenario == lastExecution)
-            {
-                return;
-            }
-
-            lastExecution = scenario;
-
-            var animations = scenario.Animations
+            var animations = scenarioEntry.Animations
                 .Select(spec => animationCompiler.Compile(spec)).ToList();
 
             foreach (var uiAnimation in animations)
