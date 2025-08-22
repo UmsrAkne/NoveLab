@@ -48,7 +48,7 @@ namespace Scenes.Scenario
             scenarioContext = LoadingManager.GlobalScenarioContext;
             imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images);
             animationCompiler =
-                new AnimationCompiler(imageStackers.First().GetFront(), imageStackers.First(), imageSetFactory);
+                new AnimationCompiler(imageStackers.First(), imageSetFactory);
 
             audioManager.ScenarioContext = scenarioContext;
             audioManager.LogDumper = logDumper;
