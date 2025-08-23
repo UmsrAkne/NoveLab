@@ -182,13 +182,7 @@ namespace Scenes.Loading
                 {
                     var asset = await loader(fullName);
 
-                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
-                    var fileName = Path.GetFileName(fullName);
-
-                    targetDictionary.TryAdd(fullName, asset);
-                    targetDictionary.TryAdd(fileNameWithoutExtension, asset);
-                    targetDictionary.TryAdd(fileName, asset);
-
+                    RegisterAssetWithMultipleKeys(targetDictionary, fullName, asset);
                     logDumper.Log($"{fullName} をロードしました。");
                     loadedCount++;
                 }
@@ -216,7 +210,17 @@ namespace Scenes.Loading
                 Path.Combine(directory, bgmOrder.FileName), extension);
 
             var clip = await audioLoader.LoadAudioClipAsync(fullPath);
-            GlobalScenarioContext.BGMs.TryAdd(bgmOrder.FileName, clip);
+            RegisterAssetWithMultipleKeys(GlobalScenarioContext.BGMs, fullPath, clip);
+        }
+
+        private void RegisterAssetWithMultipleKeys<TAsset>(IDictionary<string, TAsset> targetDictionary, string fullName, TAsset asset)
+        {
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullName);
+            var fileName = Path.GetFileName(fullName);
+
+            targetDictionary.TryAdd(fullName, asset);
+            targetDictionary.TryAdd(fileNameWithoutExtension, asset);
+            targetDictionary.TryAdd(fileName, asset);
         }
     }
 }

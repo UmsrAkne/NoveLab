@@ -13,7 +13,7 @@ namespace UI.Animations
         // name -> 生成関数（依存を渡して new）
         private readonly Dictionary<string, Func<IUIAnimation>> factories;
 
-        public AnimationCompiler(IDisplayImage displayImage, IImageContainer imageContainer, IImageSetFactory imageSetFactory = null)
+        public AnimationCompiler(IImageContainer imageContainer, IImageSetFactory imageSetFactory = null)
         {
             factories = new Dictionary<string, Func<IUIAnimation>>(StringComparer.OrdinalIgnoreCase)
             {

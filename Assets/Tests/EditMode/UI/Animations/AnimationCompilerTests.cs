@@ -14,7 +14,7 @@ namespace Tests.EditMode.UI.Animations
         [SetUp]
         public void SetUp()
         {
-            compiler = new AnimationCompiler(new DummyDisplayImage(), new DummyImageContainer());
+            compiler = new AnimationCompiler(new DummyImageContainer());
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace Tests.EditMode.UI.Animations
 
             public IDisplayImage GetFront()
             {
-                throw new System.NotImplementedException();
+                return new DummyDisplayImage();
             }
         }
     }

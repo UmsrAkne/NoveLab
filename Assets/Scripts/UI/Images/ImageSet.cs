@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace UI.Images
 {
-    public class ImageSet : MonoBehaviour, IDisplayImage
+    public class ImageSet : MonoBehaviour, IDisplayImage, ICrossFadeCapable
     {
         private readonly Dictionary<string, IUIAnimation> animations = new();
         private bool isEyeAActive = true;
