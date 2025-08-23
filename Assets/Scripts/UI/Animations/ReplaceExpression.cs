@@ -1,13 +1,15 @@
 using System;
 using Core;
 using Cysharp.Threading.Tasks;
+using ScenarioModel;
 using UnityEngine;
 
 namespace UI.Animations
 {
     public class ReplaceExpression : IUIAnimation
     {
-        private readonly ICrossFadeCapable imageSet;
+        private readonly IImageContainer imageContainer;
+        private readonly IImageSetFactory imageSetFactory;
         private readonly Texture2D newEye;
         private readonly Texture2D newMouth;
 
@@ -17,15 +19,16 @@ namespace UI.Animations
 
         public string GroupId { get; set; }
 
+        public ImageOrder ImageOrder { get; set; }
+
         public int TargetLayerIndex { get; set; }
 
         public event Action OnCompleted;
 
-        public ReplaceExpression(ICrossFadeCapable imageSet, Texture2D newEye, Texture2D newMouth)
+        public ReplaceExpression(IImageContainer imageContainer, IImageSetFactory imageSetFactory)
         {
-            this.imageSet = imageSet;
-            this.newEye = newEye;
-            this.newMouth = newMouth;
+            this.imageContainer = imageContainer;
+            this.imageSetFactory = imageSetFactory;
         }
 
         public void Start()
@@ -36,7 +39,15 @@ namespace UI.Animations
             async UniTaskVoid RunAsync()
             {
                 IsPlaying = true;
-                await imageSet.CrossFadeExpression(newEye, newMouth, Duration);
+                if (imageContainer.GetFront() is not ICrossFadeCapable imageSet)
+                {
+                    OnCompleted?.Invoke();
+                    IsPlaying = false;
+                    return;
+                }
+
+                var textures = imageSetFactory.GetTextures(ImageOrder);
+                await imageSet.CrossFadeExpression(textures[1], textures[2], Duration);
                 IsPlaying = false;
                 OnCompleted?.Invoke();
             }

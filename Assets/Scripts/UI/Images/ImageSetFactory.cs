@@ -69,6 +69,24 @@ namespace UI.Images
             stacker.AddImage(imageSet);
         }
 
+        public List<Texture2D> GetTextures(ImageOrder order)
+        {
+            if (order == null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+
+            var list = new List<Texture2D>();
+
+            foreach (var orderImageName in order.ImageNames)
+            {
+                images.TryGetValue(orderImageName, out var tex);
+                list.Add(tex);
+            }
+
+            return list;
+        }
+
         private Texture2D Resolve(IReadOnlyList<string> names, int index)
         {
             if (names == null || index >= names.Count)
