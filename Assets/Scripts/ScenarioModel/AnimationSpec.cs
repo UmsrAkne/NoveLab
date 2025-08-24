@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ScenarioModel
 {
@@ -28,18 +29,10 @@ namespace ScenarioModel
                 return list;
             }
 
-            if (spec.Name.Equals("image", StringComparison.OrdinalIgnoreCase))
-            {
-                var patterns = new List<string>() {"a", "b", "c", "d", };
+            var isImageTag = new List<string>() { "image", "draw", }
+                .Any(tag => spec.Name.Equals(tag, StringComparison.OrdinalIgnoreCase));
 
-                foreach (var pattern in patterns)
-                {
-                    spec.Attrs.TryGetValue(pattern, out var value);
-                    attrs.Add(value ?? string.Empty);
-                }
-            }
-
-            if (spec.Name.Equals("draw", StringComparison.OrdinalIgnoreCase))
+            if (isImageTag)
             {
                 var patterns = new List<string>() {"a", "b", "c", "d", };
 
