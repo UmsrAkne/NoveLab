@@ -21,6 +21,11 @@ namespace UI.Adapters
 
         public void SetTexture(Texture2D texture)
         {
+            if (texture == null)
+            {
+                return;
+            }
+
             if (spriteRenderer == null)
             {
                 Debug.LogWarning("SpriteRenderer is not assigned!");

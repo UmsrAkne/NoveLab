@@ -20,6 +20,7 @@ namespace UI.Animations
                 ["slide"] = () => new Slide(imageContainer.GetFront()),
                 ["shake"] = () => new Shake(imageContainer.GetFront()),
                 ["image"] = () => new ImageAddAnimation(imageContainer, imageSetFactory),
+                ["draw"] = () => new ReplaceExpression(imageContainer, imageSetFactory),
                 ["wait"] = () => new WaitAnimation(),
                 ["chain"] = () => new AnimationChain(),
             };
@@ -57,6 +58,13 @@ namespace UI.Animations
                 var imageOrder = new ImageOrder();
                 BindAttributes(imageOrder, spec.Attrs);
                 ia.ImageOrder = imageOrder;
+            }
+
+            if (instance is ReplaceExpression ira)
+            {
+                var imageOrder = new ImageOrder();
+                BindAttributes(imageOrder, spec.Attrs);
+                ira.ImageOrder = imageOrder;
             }
 
             BindAttributes(instance, spec.Attrs);
