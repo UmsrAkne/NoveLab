@@ -39,6 +39,17 @@ namespace ScenarioModel
                 }
             }
 
+            if (spec.Name.Equals("draw", StringComparison.OrdinalIgnoreCase))
+            {
+                var patterns = new List<string>() {"a", "b", "c", "d", };
+
+                foreach (var pattern in patterns)
+                {
+                    spec.Attrs.TryGetValue(pattern, out var value);
+                    attrs.Add(value ?? string.Empty);
+                }
+            }
+
             return attrs;
         }
     }
