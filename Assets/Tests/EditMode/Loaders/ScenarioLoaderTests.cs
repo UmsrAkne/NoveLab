@@ -18,13 +18,17 @@ namespace Tests.EditMode.Loaders
                 + "   <scenario>"
                 + @"      <text string=""test2"" />"
                 + "   </scenario>"
+                + "   <scenario>"
+                + "   </scenario>"
                 + "</root>";
 
             var doc = XDocument.Parse(xml);
             var scenarios = new ScenarioLoader().Load(doc);
 
-            Assert.That(scenarios.Count, Is.EqualTo(2));
-            CollectionAssert.AreEqual(new[] { "test1", "test2", }, scenarios.Select(s => s.Text));
+            Assert.That(scenarios.Count, Is.EqualTo(3));
+            CollectionAssert.AreEqual(
+                new[] { "test1", "test2", string.Empty, },
+                scenarios.Select(s => s.Text));
         }
     }
 }
