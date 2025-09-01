@@ -4,7 +4,7 @@ namespace ScenarioModel
 {
     public class ScenarioEntry
     {
-        public string Text { get; set; }
+        public string Text { get; set; } = string.Empty;
 
         public List<ImageOrder> ImageOrders { get; set; } = new ();
 
