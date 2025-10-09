@@ -9,8 +9,15 @@ namespace Loaders.XMLs
     {
         public void PopulateScenario(XElement scenarioEl, ScenarioEntry scenario)
         {
-            scenario.Animations.AddRange(
-                scenarioEl.Elements("anime").Select(e => ParseAnime(e, false)));
+            var animeElements = scenarioEl.Elements("anime");
+
+            // image/drawもanimeに変換して扱う
+            var legacyElements = scenarioEl.Elements()
+                .Where(e => e.Name.LocalName is "image" or "draw")
+                .Select(ConvertLegacyToAnime);
+
+            scenario.Animations.AddRange(animeElements.Select(e => ParseAnime(e, false)));
+            scenario.Animations.AddRange(legacyElements.Select(e => ParseAnime(e, false)));
         }
 
         private AnimationSpec ParseAnime(XElement el, bool insideChain)
@@ -42,6 +49,22 @@ namespace Loaders.XMLs
                         .ToDictionary(a => a.Name.LocalName, a => a.Value, StringComparer.OrdinalIgnoreCase),
                 };
             }
+        }
+
+        private XElement ConvertLegacyToAnime(XElement el)
+        {
+            var name = el.Name.LocalName switch
+            {
+                "image" => "image",
+                "draw" => "draw",
+                _ => throw new InvalidOperationException("対応していない要素です"),
+            };
+
+            var newEl = new XElement("anime",
+                new XAttribute("name", name),
+                el.Attributes());
+
+            return newEl;
         }
     }
 }
