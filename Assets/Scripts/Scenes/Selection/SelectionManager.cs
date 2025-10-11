@@ -9,6 +9,7 @@ using Cysharp.Threading.Tasks;
 using Scenes.Loading;
 using UI.Animations;
 using UnityEngine.SceneManagement;
+using Utils;
 
 namespace Scenes.Selection
 {
@@ -41,6 +42,7 @@ namespace Scenes.Selection
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
         {
+            AspectUtil.SetAspect(Camera.main);
             LoadSampleImages().Forget();
         }
 
