@@ -60,6 +60,7 @@ namespace Scenes.Scenario
 
         private void Awake()
         {
+            AspectUtil.SetAspect(Camera.main);
             typewriterEngine = new TypewriterEngine(new TextDisplayTarget(textMeshPro));
         }
 
