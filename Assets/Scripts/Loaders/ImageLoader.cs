@@ -42,7 +42,7 @@ namespace Loaders
             var imageData = await File.ReadAllBytesAsync(filePath);
 
             var texture = keepAlpha
-                ? new Texture2D(2, 2)
+                ? new Texture2D(2, 2, TextureFormat.RGBA32, false)
                 : new Texture2D(2, 2, TextureFormat.RGB24, true);
 
             if (texture.LoadImage(imageData))
