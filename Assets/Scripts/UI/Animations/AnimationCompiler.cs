@@ -17,7 +17,7 @@ namespace UI.Animations
         {
             factories = new Dictionary<string, Func<IUIAnimation>>(StringComparer.OrdinalIgnoreCase)
             {
-                ["slide"] = () => new Slide(imageContainer.GetFront()),
+                ["slide"] = () => new Slide(imageContainer.GetFront(), imageContainer),
                 ["shake"] = () => new Shake(imageContainer.GetFront()),
                 ["image"] = () => new ImageAddAnimation(imageContainer, imageSetFactory),
                 ["draw"] = () => new ReplaceExpression(imageContainer, imageSetFactory),

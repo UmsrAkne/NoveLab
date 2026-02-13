@@ -4,6 +4,7 @@ using Core;
 using ScenarioModel;
 using UI.Controllers;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace UI.Images
 {
@@ -11,6 +12,7 @@ namespace UI.Images
     {
         private readonly GameObject imageSetPrefab;
         private readonly IReadOnlyDictionary<string, Texture2D> images;
+        private static int orderNumber;
 
         public ImageSetFactory(GameObject imageSetPrefab,
             IReadOnlyDictionary<string, Texture2D> images)
@@ -60,6 +62,12 @@ namespace UI.Images
             {
                 go.transform.localPosition = new Vector3(order.X, order.Y, 0f);
                 go.transform.localScale = Vector3.one * order.Scale;
+            }
+
+            if (go.TryGetComponent<SortingGroup>(out var sortingGroup))
+            {
+                sortingGroup.sortingOrder = orderNumber++;
+                orderNumber++;
             }
 
             // 追加（上書きロジックがあるならここで分岐：ReplaceImage 等）
