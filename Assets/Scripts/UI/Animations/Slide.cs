@@ -8,7 +8,8 @@ namespace UI.Animations
 {
     public class Slide : IUIAnimation
     {
-        private readonly IDisplayImage image;
+        private IDisplayImage image;
+        private readonly IImageContainer container;
         private CancellationTokenSource cts;
 
         public bool IsPlaying { get; private set; }
@@ -29,13 +30,19 @@ namespace UI.Animations
         // ReSharper disable once MemberCanBePrivate.Global
         public int RepeatCount { get; set; } = 1;
 
-        public Slide(IDisplayImage image)
+        public Slide(IDisplayImage image, IImageContainer container = null)
         {
             this.image = image;
+            this.container = container;
         }
 
         public void Start()
         {
+            if (image == null && container != null)
+            {
+                image = container.GetFront();
+            }
+
             Stop(); // 前回のキャンセル
             cts = new CancellationTokenSource();
             Run(cts.Token).Forget();
