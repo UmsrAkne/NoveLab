@@ -208,6 +208,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 66746013}
   m_CullTransparentMesh: 1
+--- !u!1 &124702767
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 124702769}
+  - component: {fileID: 124702768}
+  m_Layer: 0
+  m_Name: TextureMerger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &124702768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124702767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fab33e19734e4879b646e7c06dde7e4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &124702769
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124702767}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &135890301
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,6 +932,7 @@ MonoBehaviour:
   - {fileID: 917785767}
   - {fileID: 1010701535}
   - {fileID: 589267346}
+  textureMerger: {fileID: 124702768}
   textMeshPro: {fileID: 314731497}
   audioManager: {fileID: 297136929}
   audioLoader: {fileID: 967734380}
@@ -1968,3 +2013,4 @@ SceneRoots:
   - {fileID: 297136930}
   - {fileID: 1825543869}
   - {fileID: 1864775723}
+  - {fileID: 124702769}

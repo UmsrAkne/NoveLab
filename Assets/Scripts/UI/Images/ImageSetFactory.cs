@@ -12,16 +12,18 @@ namespace UI.Images
     {
         private readonly GameObject imageSetPrefab;
         private readonly IReadOnlyDictionary<string, Texture2D> images;
+        private readonly TextureMerger textureMerger;
         private static int orderNumber;
 
-        public ImageSetFactory(GameObject imageSetPrefab,
-            IReadOnlyDictionary<string, Texture2D> images)
+        public ImageSetFactory(
+            GameObject imageSetPrefab, IReadOnlyDictionary<string, Texture2D> images, TextureMerger textureMerger)
         {
             this.imageSetPrefab = imageSetPrefab
                 ? imageSetPrefab
                 : throw new ArgumentNullException(nameof(imageSetPrefab));
 
             this.images = images ?? throw new ArgumentNullException(nameof(images));
+            this.textureMerger = textureMerger;
         }
 
         public void CreateAndAdd(IImageContainer imageStacker, ImageOrder order)

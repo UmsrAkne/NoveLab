@@ -32,6 +32,9 @@ namespace Scenes.Scenario
         private List<ImageStacker> imageStackers = new ();
 
         [SerializeField]
+        private TextureMerger textureMerger;
+
+        [SerializeField]
         private TextMeshProUGUI textMeshPro;
 
         [SerializeField]
@@ -46,7 +49,7 @@ namespace Scenes.Scenario
         private void Start()
         {
             scenarioContext = LoadingManager.GlobalScenarioContext;
-            imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images);
+            imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images, textureMerger);
             animationCompiler =
                 new AnimationCompiler(imageStackers.First(), imageSetFactory);
 
