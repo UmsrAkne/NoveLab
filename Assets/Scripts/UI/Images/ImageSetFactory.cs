@@ -44,6 +44,8 @@ namespace UI.Images
             var tex2 = Resolve(order.ImageNames, 1);
             var tex3 = Resolve(order.ImageNames, 2);
 
+            var mergedTexture = textureMerger.Merge(tex1, tex2, tex3);
+
             // 生成（シーン上のオブジェクトでもInstantiate可能）
             var go = UnityEngine.Object.Instantiate(imageSetPrefab, stacker.transform);
             var imageSet = go.GetComponent<ImageSet>();
@@ -52,7 +54,7 @@ namespace UI.Images
                 throw new InvalidOperationException("ImageSet prefab に ImageSet コンポーネントが見つかりません。");
             }
 
-            imageSet.SetTextures(tex1, tex2, tex3);
+            imageSet.SetTexture(mergedTexture);
 
             // 位置・スケール反映（RectTransform 前提）
             if (go.transform is RectTransform rt)
