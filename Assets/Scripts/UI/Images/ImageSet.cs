@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Core;
 using Cysharp.Threading.Tasks;
+using ScenarioModel;
 using UI.Adapters;
 using UI.Animations;
 using UnityEngine;
@@ -28,7 +29,11 @@ namespace UI.Images
 
         public GameObject GameObject => gameObject;
 
-        public async UniTask CrossFadeExpression(Texture2D newTexture, float duration = 0.5f)
+        public ITextureProvider TextureProvider { private get; set; }
+
+        public string BaseImageName { get; set; }
+
+        public async UniTask CrossFadeExpression(ImageOrder imageOrder, float duration = 0.5f)
         {
             // 前回フェードキャンセル
             if (fadeCts is { IsCancellationRequested: false, })
@@ -46,6 +51,14 @@ namespace UI.Images
             oldBase.SetAlpha(1f);
 
             // 新画像セット
+            var cloneOrder = new ImageOrder()
+            {
+                A = string.IsNullOrWhiteSpace(imageOrder.A) ? BaseImageName : imageOrder.A,
+                B = imageOrder.B,
+                C = imageOrder.C,
+            };
+
+            var newTexture = TextureProvider.GetTexture(cloneOrder);
             newBase.SetTexture(newTexture);
             newBase.SetAlpha(0f);
             newBase.SetLayerIndex(oldBase.LayerIndex + 1);

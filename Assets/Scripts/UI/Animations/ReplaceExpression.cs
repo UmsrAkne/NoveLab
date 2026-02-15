@@ -46,8 +46,7 @@ namespace UI.Animations
                     return;
                 }
 
-                var textures = imageSetFactory.GetTextures(ImageOrder);
-                await imageSet.CrossFadeExpression(textures[0], Duration);
+                await imageSet.CrossFadeExpression(ImageOrder, Duration);
                 IsPlaying = false;
                 OnCompleted?.Invoke();
             }
