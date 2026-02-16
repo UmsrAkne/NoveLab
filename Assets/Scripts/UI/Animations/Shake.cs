@@ -8,7 +8,8 @@ namespace UI.Animations
 {
     public class Shake : IUIAnimation
     {
-        private readonly IDisplayImage image;
+        private readonly IImageContainer container;
+        private IDisplayImage image;
         private CancellationTokenSource cts;
 
         public int TargetLayerIndex { get; set; }
@@ -25,13 +26,19 @@ namespace UI.Animations
 
         public int Vibrato { get; set; } = 20;
 
-        public Shake(IDisplayImage image)
+        public Shake(IDisplayImage image, IImageContainer container = null)
         {
             this.image = image;
+            this.container = container;
         }
 
         public void Start()
         {
+            if (image == null && container != null)
+            {
+                image = container.GetFront();
+            }
+
             Stop();
             cts = new CancellationTokenSource();
             Run(cts.Token).Forget();
