@@ -18,6 +18,8 @@ namespace Scenes.Scenario
 {
     public class ScenarioManager : MonoBehaviour
     {
+        private const float DefaultWidth = 1280f;
+
         private TypewriterEngine typewriterEngine;
         private int scenarioIndex;
         private GlobalScenarioContext scenarioContext;
@@ -46,9 +48,16 @@ namespace Scenes.Scenario
         [SerializeField]
         private LogDumper logDumper;
 
+        [SerializeField]
+        private RectTransform leftFrame;
+
+        [SerializeField]
+        private RectTransform rightFrame;
+
         private void Start()
         {
             scenarioContext = LoadingManager.GlobalScenarioContext;
+            SetVisibleWidth(scenarioContext.SceneSetting.WindowWidth);
             imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images, textureMerger);
             animationCompiler =
                 new AnimationCompiler(imageStackers.First(), imageSetFactory);
@@ -161,6 +170,20 @@ namespace Scenes.Scenario
                 stacker.GetFront()?.RegisterAnimation(anim.GetType().Name, anim);
                 anim.Start();
             }
+        }
+
+        private void SetVisibleWidth(float targetWidth)
+        {
+            targetWidth = Mathf.Clamp(targetWidth, 1280f, 1680f);
+
+            var delta = targetWidth - DefaultWidth;
+            var offset = delta / 2f;
+
+            // 左は左へ
+            leftFrame.anchoredPosition = new Vector2(-offset, leftFrame.anchoredPosition.y);
+
+            // 右は右へ
+            rightFrame.anchoredPosition = new Vector2(offset, rightFrame.anchoredPosition.y);
         }
     }
 }

@@ -937,6 +937,8 @@ MonoBehaviour:
   audioManager: {fileID: 297136929}
   audioLoader: {fileID: 967734380}
   logDumper: {fileID: 1825543868}
+  leftFrame: {fileID: 2088262171}
+  rightFrame: {fileID: 2086599373}
 --- !u!114 &967734380
 MonoBehaviour:
   m_ObjectHideFlags: 0
