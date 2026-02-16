@@ -96,9 +96,18 @@ namespace Scenes.Scenario
 
         private void PlayAudio(ScenarioEntry scenarioEntry)
         {
-            foreach (var scenarioVoiceOrder in scenarioEntry.VoiceOrders)
+            var audioOrders = scenarioEntry.VoiceOrders
+                .Concat(scenarioEntry.SeOrders)
+                .Concat(scenarioEntry.BgvOrders).ToList();
+
+            if (scenarioEntry.BgmOrder != null)
             {
-                audioManager.PlayAsync(scenarioVoiceOrder).Forget();
+                audioOrders.Add(scenarioEntry.BgmOrder);
+            }
+
+            foreach (var audioOrder in audioOrders)
+            {
+                audioManager.PlayAsync(audioOrder).Forget();
             }
         }
 
