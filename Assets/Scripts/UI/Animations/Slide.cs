@@ -38,10 +38,7 @@ namespace UI.Animations
 
         public void Start()
         {
-            if (image == null && container != null)
-            {
-                image = container.GetFront();
-            }
+            image = container?.GetFront();
 
             Stop(); // 前回のキャンセル
             cts = new CancellationTokenSource();
