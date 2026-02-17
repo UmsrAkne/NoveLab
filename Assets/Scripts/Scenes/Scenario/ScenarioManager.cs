@@ -12,6 +12,7 @@ using UI.Controllers;
 using UI.Images;
 using UI.TypeWriter;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Utils;
 
 namespace Scenes.Scenario
@@ -90,6 +91,11 @@ namespace Scenes.Scenario
                     PlayAnimation(scenario);
                     PlayAudio(scenario);
                 }
+            }
+
+            if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl))
+            {
+                ReloadScenarioAsync();
             }
         }
 
@@ -184,6 +190,14 @@ namespace Scenes.Scenario
 
             // 右は右へ
             rightFrame.anchoredPosition = new Vector2(offset, rightFrame.anchoredPosition.y);
+        }
+
+        private void ReloadScenarioAsync()
+        {
+            // await sceneFader.FadeOut(1f);
+
+            LoadingManager.GlobalScenarioContext.IsLoaded = false;
+            SceneManager.LoadScene("LoadingScene");
         }
     }
 }
