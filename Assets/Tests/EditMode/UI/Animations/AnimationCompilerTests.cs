@@ -137,6 +137,16 @@ namespace Tests.EditMode.UI.Animations
             {
                 return new DummyDisplayImage();
             }
+
+            public SpriteRenderer GetEffectRenderer()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void SetEffectAlpha(float alpha)
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 }

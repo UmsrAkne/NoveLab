@@ -21,6 +21,7 @@ namespace UI.Animations
                 ["shake"] = () => new Shake(imageContainer.GetFront(), imageContainer),
                 ["image"] = () => new ImageAddAnimation(imageContainer, imageSetFactory),
                 ["draw"] = () => new ReplaceExpression(imageContainer, imageSetFactory),
+                ["flash"] = () => new Flash(imageContainer),
                 ["wait"] = () => new WaitAnimation(),
                 ["chain"] = () => new AnimationChain(),
             };

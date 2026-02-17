@@ -78,6 +78,20 @@ namespace UI.Controllers
             return activeImages.LastOrDefault();
         }
 
+        public SpriteRenderer GetEffectRenderer()
+        {
+            return effectRenderer;
+        }
+
+        public void SetEffectAlpha(float alpha)
+        {
+            if (effectRenderer == null) return;
+
+            var c = effectRenderer.color;
+            c.a = alpha;
+            effectRenderer.color = c;
+        }
+
         private Sprite CreateWhiteSprite()
         {
             var tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
