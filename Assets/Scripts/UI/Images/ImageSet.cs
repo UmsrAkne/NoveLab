@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Core;
 using Cysharp.Threading.Tasks;
+using ScenarioModel;
 using UI.Adapters;
 using UI.Animations;
 using UnityEngine;
@@ -18,122 +19,87 @@ namespace UI.Images
         private CancellationTokenSource fadeCts;
         private Vector2 basePos;
         private Vector2 shakeOffset;
+        private bool isBaseAActive = true;
 
         [SerializeField]
-        private CanvasGroup canvasGroup;
+        private SpriteRendererAdapter baseImageA;
 
         [SerializeField]
-        private SpriteRendererAdapter eyeA;
-
-        [SerializeField]
-        private SpriteRendererAdapter eyeB;
-
-        [SerializeField]
-        private SpriteRendererAdapter mouthA;
-
-        [SerializeField]
-        private SpriteRendererAdapter mouthB;
-
-        [SerializeField]
-        private SpriteRendererAdapter baseImage;
+        private SpriteRendererAdapter baseImageB;
 
         public GameObject GameObject => gameObject;
 
-        public async UniTask CrossFadeExpression(Texture2D newEye, Texture2D newMouth, float duration = 0.5f)
+        public ITextureProvider TextureProvider { private get; set; }
+
+        public string BaseImageName { get; set; }
+
+        public async UniTask CrossFadeExpression(ImageOrder imageOrder, float duration = 0.5f)
         {
-            // 前回のフェードを強制完了
+            // 前回フェードキャンセル
             if (fadeCts is { IsCancellationRequested: false, })
             {
-                fadeCts.Cancel(); // トークンでキャンセル
+                fadeCts.Cancel();
                 fadeCts.Dispose();
             }
 
             fadeCts = new CancellationTokenSource();
             var token = fadeCts.Token;
 
-            var (eyeOld, eyeNew) = isEyeAActive ? (eyeA, eyeB) : (eyeB, eyeA);
-            var (mouthOld, mouthNew) = isMouthAActive ? (mouthA, mouthB) : (mouthB, mouthA);
+            var (oldBase, newBase) = isBaseAActive ? (baseImageA, baseImageB) : (baseImageB, baseImageA);
 
-            // 強制完了（途中までだった旧スロットを強制表示
-            eyeOld.SetAlpha(1f);
-            mouthOld.SetAlpha(1f);
+            // 強制完了
+            oldBase.SetAlpha(1f);
 
-            // 新しいテクスチャ＋透明
-            eyeNew.SetTexture(newEye);
-            eyeNew.SetAlpha(0f);
-            mouthNew.SetTexture(newMouth);
-            mouthNew.SetAlpha(0f);
+            // 新画像セット
+            var cloneOrder = new ImageOrder()
+            {
+                A = string.IsNullOrWhiteSpace(imageOrder.A) ? BaseImageName : imageOrder.A,
+                B = imageOrder.B,
+                C = imageOrder.C,
+            };
 
-            // 表示順調整（必要なら）
-            eyeNew.SetLayerIndex(eyeOld.LayerIndex + 1);
-            mouthNew.SetLayerIndex(mouthOld.LayerIndex + 1);
+            var newTexture = TextureProvider.GetTexture(cloneOrder);
+            newBase.SetTexture(newTexture);
+            newBase.SetAlpha(0f);
+            newBase.SetLayerIndex(oldBase.LayerIndex + 1);
 
             ApplySortingOrder();
 
-            // 新フェード開始（キャンセル可能なように）
-            var eyeFade = new FadeIn(eyeNew) { Duration = duration, };
-            var mouthFade = new FadeIn(mouthNew) { Duration = duration, };
+            var fade = new FadeIn(newBase) { Duration = duration, };
 
-            async UniTask SafeFade(FadeIn fade)
+            var tcs = new UniTaskCompletionSource();
+            fade.OnCompleted += () => tcs.TrySetResult();
+
+            fade.Start();
+
+            try
             {
-                var tcs = new UniTaskCompletionSource();
-                fade.OnCompleted += () => tcs.TrySetResult();
-                fade.Start();
-                try
+                await using (token.Register(fade.Stop))
                 {
-                    await using (token.Register(fade.Stop))
-                    {
-                        await tcs.Task;
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    fade.Stop(); // 念のため停止
+                    await tcs.Task;
                 }
             }
+            catch (OperationCanceledException)
+            {
+                fade.Stop();
+                return;
+            }
 
-            await UniTask.WhenAll(SafeFade(eyeFade), SafeFade(mouthFade));
-
-            // 強制完了した可能性もあるので再確認
             if (token.IsCancellationRequested)
             {
                 return;
             }
 
             // 完了後
-            eyeOld.SetAlpha(0f);
-            mouthOld.SetAlpha(0f);
-            isEyeAActive = !isEyeAActive;
-            isMouthAActive = !isMouthAActive;
+            oldBase.SetAlpha(0f);
+            isBaseAActive = !isBaseAActive;
+
             ApplySortingOrder();
-        }
-
-        public void SetTextures(Texture2D baseTexture, Texture2D eyeTex, Texture2D mouthTex)
-        {
-            if (baseTexture != null)
-            {
-                baseImage.SetTexture(baseTexture);
-                baseImage.SetLayerIndex(0);
-            }
-
-            if (eyeTex != null)
-            {
-                eyeA.SetTexture(eyeTex);
-                eyeA.SetLayerIndex(1);
-            }
-
-            if (mouthTex != null)
-            {
-                mouthA.SetTexture(mouthTex);
-                mouthA.SetLayerIndex(2);
-            }
         }
 
         public void SetAlpha(float alpha)
         {
-            baseImage.SetAlpha(alpha);
-            eyeA.SetAlpha(alpha);
-            mouthA.SetAlpha(alpha);
+            baseImageA.SetAlpha(alpha);
         }
 
         public void SetScale(float scale)
@@ -147,7 +113,7 @@ namespace UI.Images
 
         public void SetTexture(Texture2D baseTexture)
         {
-            baseImage.SetTexture(baseTexture);
+            baseImageA.SetTexture(baseTexture);
         }
 
         public void RegisterAnimation(string key, IUIAnimation anime)
@@ -213,11 +179,7 @@ namespace UI.Images
 
         private void ApplySortingOrder()
         {
-            SetAdapterOrder(baseImage);
-            SetAdapterOrder(eyeA);
-            SetAdapterOrder(eyeB);
-            SetAdapterOrder(mouthA);
-            SetAdapterOrder(mouthB);
+            SetAdapterOrder(baseImageA);
         }
 
         private void SetAdapterOrder(SpriteRendererAdapter adapter)

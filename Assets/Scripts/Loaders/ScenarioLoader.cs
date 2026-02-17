@@ -22,7 +22,9 @@ namespace Loaders
                 new AnimeElementParser(),
             };
 
-            return doc.Root?.Elements("scenario").Select(x =>
+            return doc.Root?.Elements("scenario")
+                .Where(x => !x.Elements("ignore").Any())
+                .Select(x =>
             {
                 var scenarioEntry = new ScenarioEntry();
                 elementParsers.ForEach(p => p.PopulateScenario(x, scenarioEntry));

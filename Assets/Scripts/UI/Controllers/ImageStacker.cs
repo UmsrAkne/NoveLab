@@ -18,6 +18,33 @@ namespace UI.Controllers
         [SerializeField]
         private Transform imageParent;
 
+        [SerializeField]
+        private Transform effectLayer;
+
+        [SerializeField]
+        private bool enableEffectLayer;
+
+        private Sprite whiteSprite;
+
+        private SpriteRenderer effectRenderer;
+
+        private void Awake()
+        {
+            if (!enableEffectLayer)
+            {
+                return;
+            }
+
+            var go = new GameObject("WhiteEffect");
+            go.transform.SetParent(effectLayer, false);
+            go.transform.localScale = new Vector3(1680, 720, 1);
+
+            effectRenderer = go.AddComponent<SpriteRenderer>();
+            effectRenderer.sprite = CreateWhiteSprite();
+            effectRenderer.color = new Color(1, 1, 1, 0); // デフォルトは透明
+            effectRenderer.sortingOrder = baseSortingOrder + 5000;
+        }
+
         public void AddImage(IDisplayImage newImage)
         {
             var imageGameObject = newImage.GameObject;
@@ -49,6 +76,33 @@ namespace UI.Controllers
         public IDisplayImage GetFront()
         {
             return activeImages.LastOrDefault();
+        }
+
+        public SpriteRenderer GetEffectRenderer()
+        {
+            return effectRenderer;
+        }
+
+        public void SetEffectAlpha(float alpha)
+        {
+            if (effectRenderer == null) return;
+
+            var c = effectRenderer.color;
+            c.a = alpha;
+            effectRenderer.color = c;
+        }
+
+        private Sprite CreateWhiteSprite()
+        {
+            var tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+            tex.SetPixel(0, 0, Color.white);
+            tex.Apply();
+
+            return Sprite.Create(
+                tex,
+                new Rect(0, 0, 1, 1),
+                new Vector2(0.5f, 0.5f),
+                1f);
         }
     }
 }

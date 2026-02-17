@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Core
 {
     public interface IImageContainer
@@ -5,5 +7,9 @@ namespace Core
         void AddImage(IDisplayImage image);
 
         IDisplayImage GetFront();
+
+        public SpriteRenderer GetEffectRenderer();
+
+        public void SetEffectAlpha(float alpha);
     }
 }

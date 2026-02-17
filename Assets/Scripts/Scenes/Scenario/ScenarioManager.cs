@@ -12,12 +12,15 @@ using UI.Controllers;
 using UI.Images;
 using UI.TypeWriter;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Utils;
 
 namespace Scenes.Scenario
 {
     public class ScenarioManager : MonoBehaviour
     {
+        private const float DefaultWidth = 1280f;
+
         private TypewriterEngine typewriterEngine;
         private int scenarioIndex;
         private GlobalScenarioContext scenarioContext;
@@ -32,6 +35,9 @@ namespace Scenes.Scenario
         private List<ImageStacker> imageStackers = new ();
 
         [SerializeField]
+        private TextureMerger textureMerger;
+
+        [SerializeField]
         private TextMeshProUGUI textMeshPro;
 
         [SerializeField]
@@ -43,10 +49,17 @@ namespace Scenes.Scenario
         [SerializeField]
         private LogDumper logDumper;
 
+        [SerializeField]
+        private RectTransform leftFrame;
+
+        [SerializeField]
+        private RectTransform rightFrame;
+
         private void Start()
         {
             scenarioContext = LoadingManager.GlobalScenarioContext;
-            imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images);
+            SetVisibleWidth(scenarioContext.SceneSetting.WindowWidth);
+            imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images, textureMerger);
             animationCompiler =
                 new AnimationCompiler(imageStackers.First(), imageSetFactory);
 
@@ -79,6 +92,11 @@ namespace Scenes.Scenario
                     PlayAudio(scenario);
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl))
+            {
+                ReloadScenarioAsync();
+            }
         }
 
         private ScenarioEntry GetScenario()
@@ -93,9 +111,18 @@ namespace Scenes.Scenario
 
         private void PlayAudio(ScenarioEntry scenarioEntry)
         {
-            foreach (var scenarioVoiceOrder in scenarioEntry.VoiceOrders)
+            var audioOrders = scenarioEntry.VoiceOrders
+                .Concat(scenarioEntry.SeOrders)
+                .Concat(scenarioEntry.BgvOrders).ToList();
+
+            if (scenarioEntry.BgmOrder != null)
             {
-                audioManager.PlayAsync(scenarioVoiceOrder).Forget();
+                audioOrders.Add(scenarioEntry.BgmOrder);
+            }
+
+            foreach (var audioOrder in audioOrders)
+            {
+                audioManager.PlayAsync(audioOrder).Forget();
             }
         }
 
@@ -149,6 +176,28 @@ namespace Scenes.Scenario
                 stacker.GetFront()?.RegisterAnimation(anim.GetType().Name, anim);
                 anim.Start();
             }
+        }
+
+        private void SetVisibleWidth(float targetWidth)
+        {
+            targetWidth = Mathf.Clamp(targetWidth, 1280f, 1680f);
+
+            var delta = targetWidth - DefaultWidth;
+            var offset = delta / 2f;
+
+            // 左は左へ
+            leftFrame.anchoredPosition = new Vector2(-offset, leftFrame.anchoredPosition.y);
+
+            // 右は右へ
+            rightFrame.anchoredPosition = new Vector2(offset, rightFrame.anchoredPosition.y);
+        }
+
+        private void ReloadScenarioAsync()
+        {
+            // await sceneFader.FadeOut(1f);
+
+            LoadingManager.GlobalScenarioContext.IsLoaded = false;
+            SceneManager.LoadScene("LoadingScene");
         }
     }
 }
