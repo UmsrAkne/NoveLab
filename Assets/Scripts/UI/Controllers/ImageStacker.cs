@@ -21,19 +21,29 @@ namespace UI.Controllers
         [SerializeField]
         private Transform effectLayer;
 
+        [SerializeField]
+        private bool enableEffectLayer;
+
         private Sprite whiteSprite;
 
         private SpriteRenderer effectRenderer;
 
         private void Awake()
         {
+            if (!enableEffectLayer)
+            {
+                return;
+            }
+
             var go = new GameObject("WhiteEffect");
             go.transform.SetParent(effectLayer, false);
+            go.transform.localScale = new Vector3(1680, 720, 1);
 
             effectRenderer = go.AddComponent<SpriteRenderer>();
             effectRenderer.sprite = CreateWhiteSprite();
             effectRenderer.color = new Color(1, 1, 1, 0); // デフォルトは透明
-      }
+            effectRenderer.sortingOrder = baseSortingOrder + 5000;
+        }
 
         public void AddImage(IDisplayImage newImage)
         {
@@ -61,8 +71,6 @@ namespace UI.Controllers
                 Destroy(oldest.GameObject);
                 activeImages.RemoveAt(0);
             }
-
-            effectLayer.SetAsFirstSibling();
         }
 
         public IDisplayImage GetFront()
