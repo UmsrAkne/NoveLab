@@ -63,8 +63,6 @@ namespace UI.Images
             newBase.SetAlpha(0f);
             newBase.SetLayerIndex(oldBase.LayerIndex + 1);
 
-            ApplySortingOrder();
-
             var fade = new FadeIn(newBase) { Duration = duration, };
 
             var tcs = new UniTaskCompletionSource();
