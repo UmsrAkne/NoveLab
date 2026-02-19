@@ -27,6 +27,8 @@ namespace UI.Animations
         // ReSharper disable once MemberCanBePrivate.Global
         public float Angle { get; set; }
 
+        public float Degree { set => Angle = value; }
+
         // ReSharper disable once MemberCanBePrivate.Global
         public int RepeatCount { get; set; } = 1;
 
