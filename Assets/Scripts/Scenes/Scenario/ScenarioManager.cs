@@ -21,6 +21,7 @@ namespace Scenes.Scenario
     {
         private const float DefaultWidth = 1280f;
 
+        private readonly Dictionary<(int, string), IUIAnimation> runningAnimations = new();
         private TypewriterEngine typewriterEngine;
         private int scenarioIndex;
         private GlobalScenarioContext scenarioContext;
@@ -164,6 +165,25 @@ namespace Scenes.Scenario
 
         private void RegisterSmart(IUIAnimation anim)
         {
+            // キーを作成 (レイヤー番号とアニメーションの型名)
+            var key = (anim.TargetLayerIndex, anim.GetType().Name);
+
+            // すでに同じレイヤーで同じ型のアニメーションが動いていれば止める
+            if (runningAnimations.TryGetValue(key, out var oldAnim))
+            {
+                oldAnim.Stop();
+                runningAnimations.Remove(key);
+            }
+
+            anim.OnCompleted += () =>
+            {
+                // 自分がまだ辞書に残っているなら削除
+                if (runningAnimations.TryGetValue(key, out var current) && current == anim)
+                {
+                    runningAnimations.Remove(key);
+                }
+            };
+
             if (anim is ImageAddAnimation)
             {
                 // ImageAddAnimation の場合だけ特殊な処理
@@ -176,6 +196,8 @@ namespace Scenes.Scenario
                 stacker.GetFront()?.RegisterAnimation(anim.GetType().Name, anim);
                 anim.Start();
             }
+
+            runningAnimations[key] = anim;
         }
 
         private void SetVisibleWidth(float targetWidth)

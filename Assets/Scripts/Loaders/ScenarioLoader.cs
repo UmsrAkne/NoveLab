@@ -22,14 +22,45 @@ namespace Loaders
                 new AnimeElementParser(),
             };
 
-            return doc.Root?.Elements("scenario")
+            var scenarios = doc.Root?.Elements("scenario")
                 .Where(x => !x.Elements("ignore").Any())
-                .Select(x =>
+                .ToList();
+
+            if (scenarios == null || scenarios.Count == 0)
             {
-                var scenarioEntry = new ScenarioEntry();
-                elementParsers.ForEach(p => p.PopulateScenario(x, scenarioEntry));
-                return scenarioEntry;
-            }).ToList();
+                return new List<ScenarioEntry>();
+            }
+
+            // start位置取得
+            var startIndex = scenarios.FindIndex(x => x.Elements("start").Any());
+            if (startIndex < 0)
+            {
+                startIndex = 0;
+            }
+
+            // end位置取得
+            var endIndex = scenarios.FindIndex(x => x.Elements("end").Any());
+            if (endIndex < 0)
+            {
+                endIndex = scenarios.Count - 1;
+            }
+
+            // start > end なら安全のため空
+            if (startIndex > endIndex)
+            {
+                return new List<ScenarioEntry>();
+            }
+
+            return scenarios
+                .Skip(startIndex)
+                .Take(endIndex - startIndex + 1)
+                .Select(x =>
+                {
+                    var scenarioEntry = new ScenarioEntry();
+                    elementParsers.ForEach(p => p.PopulateScenario(x, scenarioEntry));
+                    return scenarioEntry;
+                })
+                .ToList();
         }
 
         public List<ScenarioEntry> Load(string xmlFilePath)

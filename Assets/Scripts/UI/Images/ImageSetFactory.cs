@@ -51,6 +51,7 @@ namespace UI.Images
             var imageSet = go.GetComponent<ImageSet>();
             imageSet.TextureProvider = this;
             imageSet.BaseImageName = order.A;
+            imageSet.SetBasePosition(new Vector2(order.X, order.Y));
 
             if (!imageSet)
             {
