@@ -31,6 +31,7 @@ namespace Audio
             }
 
             // 新しいBGM再生
+            audioSource.loop = true;
             audioSource.clip = newClip;
             audioSource.volume = 0f;
             audioSource.Play();
