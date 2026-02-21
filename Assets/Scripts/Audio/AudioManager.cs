@@ -57,6 +57,12 @@ namespace Audio
                     .ToList();
 
                 bgvPlayer.PrepareBgVoiceClips(order, clips);
+
+                if (!voicePlayer.IsPlaying(order.ChannelIndex))
+                {
+                    bgvPlayer.Play(order.ChannelIndex);
+                    bgvPlayer.FadeInVolume(order.ChannelIndex, 1f, 0.4f);
+                }
             }
 
             if (order.AudioType == AudioType.Se)
