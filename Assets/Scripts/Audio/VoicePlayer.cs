@@ -33,6 +33,8 @@ namespace Audio
 
         public async UniTask PlayVoiceAsync(AudioClip clip, AudioOrder order)
         {
+            Debug.Log($"[VOICE START] ch:{order.ChannelIndex} time:{Time.time}");
+
             if (order.ChannelIndex < 0 || order.ChannelIndex >= channels.Count)
             {
                 Debug.LogError($"Invalid channel index: {order.ChannelIndex}");

@@ -56,6 +56,8 @@ namespace Audio
                 return;
             }
 
+            Debug.Log($"[BGV PLAY] ch:{channelIndex} time:{Time.time}");
+
             // 既存ループを止めて、再スタート
             Stop(channelIndex);
 
@@ -143,6 +145,8 @@ namespace Audio
 
         private async UniTaskVoid LoopPlayAsync(int channelIndex, float volume, float pan, CancellationToken token)
         {
+            Debug.Log($"[BGV SOURCE PLAY] ch:{channelIndex} time:{Time.time}");
+
             var source = sources[channelIndex];
 
             while (!token.IsCancellationRequested)
