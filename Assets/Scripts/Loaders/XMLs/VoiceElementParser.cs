@@ -15,7 +15,13 @@ namespace Loaders.XMLs
             var voiceElements = scenarioElement.Elements("voice");
             foreach (var element in voiceElements)
             {
-                scenario.VoiceOrders.Add(ConvertToAudioOrder(element));
+                var vc = ConvertToAudioOrder(element);
+                if (string.IsNullOrWhiteSpace(vc.FileName))
+                {
+                    continue;
+                }
+
+                scenario.VoiceOrders.Add(vc);
             }
         }
 

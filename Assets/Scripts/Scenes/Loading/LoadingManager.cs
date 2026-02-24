@@ -26,8 +26,50 @@ namespace Scenes.Loading
 
         private readonly string scenarioFileName = "scenario.xml";
         private readonly string settingFileName = "setting.xml";
+        private bool canReload;
 
         private async void Start()
+        {
+            await TryLoadAsync();
+        }
+
+        private async UniTask TryLoadAsync()
+        {
+            errorMessageText.text = "";
+
+            try
+            {
+                await LoadCoreAsync();
+                GlobalScenarioContext.IsLoaded = true;
+                SceneManager.LoadScene("ScenarioScene");
+            }
+            catch (Exception ex)
+            {
+                errorMessageText.text = string.Empty;
+                AppendMessageLine("ロードに失敗しました。");
+                AppendMessageLine(ex.Message);
+                AppendMessageLine("Ctrl + R でリロードが可能です。");
+            }
+        }
+
+        private void Update()
+        {
+            if (!canReload)
+            {
+                return;
+            }
+
+            if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+            {
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    canReload = false;
+                    TryLoadAsync().Forget();
+                }
+            }
+        }
+
+        private async UniTask LoadCoreAsync()
         {
             var path = GlobalScenarioContext.ScenarioDirectoryPath;
             if (string.IsNullOrWhiteSpace(path))
@@ -65,6 +107,7 @@ namespace Scenes.Loading
                 AppendMessageLine("Error:");
                 AppendMessageLine($"Line number: {e.LineNumber}");
                 AppendMessageLine(e.Message);
+                canReload = true;
                 throw;
             }
 
@@ -79,6 +122,7 @@ namespace Scenes.Loading
                 AppendMessageLine("Error:");
                 AppendMessageLine($"Line number: {e.LineNumber}");
                 AppendMessageLine(e.Message);
+                canReload = true;
                 throw;
             }
 
@@ -138,9 +182,6 @@ namespace Scenes.Loading
 
                 await UniTask.WhenAll(voiceTask, bgvTask, seTask, imageTask, animationImageTask, bgmTask, defaultBgmTask);
             }
-
-            GlobalScenarioContext.IsLoaded = true;
-            SceneManager.LoadScene("ScenarioScene");
         }
 
         private void AppendMessageLine(string msg)

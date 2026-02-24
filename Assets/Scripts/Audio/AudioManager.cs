@@ -31,7 +31,8 @@ namespace Audio
         {
             if (LogDumper != null)
             {
-                LogDumper.Log($"PlayAsync: Type:{order.AudioType} FileName: {order.FileName}");
+                var fn = !string.IsNullOrWhiteSpace(order.FileName) ? order.FileName : order.FileNames[0];
+                LogDumper.Log($"PlayAsync: Type:{order.AudioType} FileName: {fn}");
             }
 
             if (order.AudioType == AudioType.Bgm)
@@ -42,9 +43,11 @@ namespace Audio
 
             if (order.AudioType == AudioType.Voice)
             {
+                // Voice 再生前に Bgv をフェードアウト
+                bgvPlayer.FadeOutVolume(order.ChannelIndex, 0, 0.25f);
+
                 ScenarioContext.Voices.TryGetValue(order.FileName, out var clip);
                 await voicePlayer.PlayVoiceAsync(clip, order);
-                bgvPlayer.FadeOutVolume(order.ChannelIndex, 0, 0.25f);
             }
 
             if (order.AudioType == AudioType.Bgv)
@@ -54,6 +57,12 @@ namespace Audio
                     .ToList();
 
                 bgvPlayer.PrepareBgVoiceClips(order, clips);
+
+                if (!voicePlayer.IsPlaying(order.ChannelIndex))
+                {
+                    bgvPlayer.Play(order.ChannelIndex);
+                    bgvPlayer.FadeInVolume(order.ChannelIndex, 1f, 0.4f);
+                }
             }
 
             if (order.AudioType == AudioType.Se)
@@ -72,6 +81,8 @@ namespace Audio
 
         private void OnVoicePlaybackCompleted(int channel)
         {
+            Debug.Log($"[VOICE END EVENT] ch:{channel} time:{Time.time}");
+
             bgvPlayer.Play(channel);
             bgvPlayer.FadeInVolume(channel, 1f, 0.4f);
         }

@@ -11,11 +11,15 @@ namespace Audio
 
         public async UniTask PlayBgmAsync(AudioClip newClip, float fadeDuration = 1f)
         {
-            // フェード中なら完了まで待つ（同時再生を防止）
-            await currentFadeTask.SuppressCancellationThrow();
+            if (currentFadeTask.Status == UniTaskStatus.Pending)
+            {
+                await currentFadeTask.SuppressCancellationThrow();
+            }
 
+            // 新しいタスクを代入
             currentFadeTask = CrossFadeAsync(newClip, fadeDuration);
             await currentFadeTask;
+            currentFadeTask = default;
         }
 
         private async UniTask CrossFadeAsync(AudioClip newClip, float duration)
@@ -31,6 +35,7 @@ namespace Audio
             }
 
             // 新しいBGM再生
+            audioSource.loop = true;
             audioSource.clip = newClip;
             audioSource.volume = 0f;
             audioSource.Play();

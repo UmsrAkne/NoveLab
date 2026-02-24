@@ -19,6 +19,7 @@ namespace UI.Animations
             {
                 ["slide"] = () => new Slide(imageContainer.GetFront(), imageContainer),
                 ["shake"] = () => new Shake(imageContainer.GetFront(), imageContainer),
+                ["scaleChange"] = () => new ScaleChange(imageContainer.GetFront(), imageContainer),
                 ["image"] = () => new ImageAddAnimation(imageContainer, imageSetFactory),
                 ["draw"] = () => new ReplaceExpression(imageContainer, imageSetFactory),
                 ["flash"] = () => new Flash(imageContainer),
