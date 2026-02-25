@@ -70,6 +70,8 @@ namespace Scenes.Scenario
             audioManager.PlayAsync(scenarioContext.SceneSetting.BgmOrder).Forget();
 
             logDumper.Log($"Loaded from: {scenarioContext.ScenarioDirectoryPath}");
+
+            AdvanceScenario();
         }
 
         private void Awake()
@@ -98,6 +100,14 @@ namespace Scenes.Scenario
             {
                 ReloadScenarioAsync();
             }
+        }
+
+        private void AdvanceScenario()
+        {
+            var scenario = GetScenario();
+            WriteText();
+            PlayAnimation(scenario);
+            PlayAudio(scenario);
         }
 
         private ScenarioEntry GetScenario()
