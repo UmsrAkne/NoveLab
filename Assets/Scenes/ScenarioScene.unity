@@ -657,9 +657,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab
-    NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab
-    NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab NoveLab '
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fe42722188b92654da7e397665a6408a, type: 2}
   m_sharedMaterial: {fileID: -648140484288902219, guid: fe42722188b92654da7e397665a6408a, type: 2}
