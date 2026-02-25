@@ -38,7 +38,7 @@ namespace Audio
             if (order.AudioType == AudioType.Bgm)
             {
                 ScenarioContext.BGMs.TryGetValue(order.FileName, out var clip);
-                await bgmPlayer.PlayBgmAsync(clip, fadeDuration: 1f);
+                await bgmPlayer.PlayBgmAsync(clip, order, fadeDuration: 1f);
             }
 
             if (order.AudioType == AudioType.Voice)

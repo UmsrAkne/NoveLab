@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using ScenarioModel;
 
 namespace Audio
 {
@@ -9,23 +10,24 @@ namespace Audio
 
         private UniTask currentFadeTask;
 
-        public async UniTask PlayBgmAsync(AudioClip newClip, float fadeDuration = 1f)
+        public async UniTask PlayBgmAsync(AudioClip newClip, AudioOrder order, float fadeDuration = 1f)
         {
             if (currentFadeTask.Status == UniTaskStatus.Pending)
             {
                 await currentFadeTask.SuppressCancellationThrow();
             }
 
+            var targetVolume = order != null ? Mathf.Clamp01(order.Volume) : 1f;
+
             // 新しいタスクを代入
-            currentFadeTask = CrossFadeAsync(newClip, fadeDuration);
+            currentFadeTask = CrossFadeAsync(newClip, fadeDuration, targetVolume);
             await currentFadeTask;
             currentFadeTask = default;
         }
 
-        private async UniTask CrossFadeAsync(AudioClip newClip, float duration)
+        private async UniTask CrossFadeAsync(AudioClip newClip, float duration, float targetVolume)
         {
             const float minVolume = 0f;
-            var maxVolume = 1f;
 
             if (audioSource.isPlaying)
             {
@@ -40,8 +42,8 @@ namespace Audio
             audioSource.volume = 0f;
             audioSource.Play();
 
-            // フェードイン
-            await FadeVolumeAsync(audioSource, maxVolume, duration);
+            // フェードイン（目標音量は order.Volume ）
+            await FadeVolumeAsync(audioSource, targetVolume, duration);
         }
 
         private async UniTask FadeVolumeAsync(AudioSource source, float targetVolume, float duration)
