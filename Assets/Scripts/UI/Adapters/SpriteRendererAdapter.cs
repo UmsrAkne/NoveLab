@@ -32,7 +32,17 @@ namespace UI.Adapters
                 return;
             }
 
-            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1);
+            // 本用途は単純な2D表示のみのため、
+            // 不要な輪郭メッシュ生成を避ける目的で FullRect を使用する。
+            // FullRect を指定することによりパフォーマンスの向上（スパイクの軽減）を確認。
+            var sprite =
+                Sprite.Create(
+                    texture, new Rect(0, 0, texture.width, texture.height),
+                    new Vector2(0.5f, 0.5f),
+                    1,
+                    0,
+                    SpriteMeshType.FullRect);
+
             spriteRenderer.sprite = sprite;
             texture2D = texture;
             if (spriteMask != null)
