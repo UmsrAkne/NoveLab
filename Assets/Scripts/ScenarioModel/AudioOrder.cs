@@ -23,5 +23,7 @@ namespace ScenarioModel
         public List<string> ResourceFileNames => AudioType == AudioType.Bgv
             ? FileNames
             : new List<string>() { FileName, };
+
+        public int ScenarioId { get; set; }
     }
 }

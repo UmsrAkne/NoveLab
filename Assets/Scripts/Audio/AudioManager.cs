@@ -69,7 +69,7 @@ namespace Audio
             {
                 ScenarioContext.Ses.TryGetValue(order.FileName, out var clip);
 
-                sePlayer.Stop(order.ChannelIndex);
+                // 既存の SE の停止制御は、PlaySe() の内部で再生直前に実行するため、こちら側では停止命令は出さない。
                 sePlayer.PlaySe(clip, order);
             }
 

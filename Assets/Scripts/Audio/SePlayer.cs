@@ -74,6 +74,12 @@ namespace Audio
             }
 
             var channel = channels[order.ChannelIndex];
+            if (channel.CurrentScenarioId != order.ScenarioId)
+            {
+                channel.CurrentScenarioId = order.ScenarioId;
+                Stop(order.ChannelIndex);
+            }
+
             channel.Queue.Enqueue((clip, order));
         }
 
@@ -125,6 +131,7 @@ namespace Audio
             public AudioSource Source;
             public Queue<(AudioClip, AudioOrder)> Queue;
             public CancellationTokenSource CancelTokenSource;
+            public int CurrentScenarioId;
         }
     }
 }
