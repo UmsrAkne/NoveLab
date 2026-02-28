@@ -68,6 +68,8 @@ namespace Audio
             if (order.AudioType == AudioType.Se)
             {
                 ScenarioContext.Ses.TryGetValue(order.FileName, out var clip);
+
+                sePlayer.Stop(order.ChannelIndex);
                 sePlayer.PlaySe(clip, order);
             }
 
