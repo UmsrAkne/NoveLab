@@ -15,7 +15,9 @@ namespace Loaders.XMLs
             var seElements = scenarioElement.Elements("se");
             foreach (var element in seElements)
             {
-                scenario.SeOrders.Add(ConvertToAudioOrder(element));
+                var elm = ConvertToAudioOrder(element);
+                elm.ScenarioId = scenario.ScenarioId;
+                scenario.SeOrders.Add(elm);
             }
         }
 

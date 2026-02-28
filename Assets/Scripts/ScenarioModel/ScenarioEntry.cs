@@ -19,5 +19,7 @@ namespace ScenarioModel
         public Chapter Chapter { get; set; }
 
         public List<AnimationSpec> Animations { get; set; } = new ();
+
+        public int ScenarioId { get; set; }
     }
 }

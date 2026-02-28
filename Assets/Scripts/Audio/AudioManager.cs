@@ -68,6 +68,8 @@ namespace Audio
             if (order.AudioType == AudioType.Se)
             {
                 ScenarioContext.Ses.TryGetValue(order.FileName, out var clip);
+
+                // 既存の SE の停止制御は、PlaySe() の内部で再生直前に実行するため、こちら側では停止命令は出さない。
                 sePlayer.PlaySe(clip, order);
             }
 

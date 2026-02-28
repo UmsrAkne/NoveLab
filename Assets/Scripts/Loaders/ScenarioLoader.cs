@@ -54,9 +54,13 @@ namespace Loaders
             return scenarios
                 .Skip(startIndex)
                 .Take(endIndex - startIndex + 1)
-                .Select(x =>
+                .Select((x, index)=>
                 {
-                    var scenarioEntry = new ScenarioEntry();
+                    var scenarioEntry = new ScenarioEntry()
+                    {
+                        ScenarioId = index,
+                    };
+
                     elementParsers.ForEach(p => p.PopulateScenario(x, scenarioEntry));
                     return scenarioEntry;
                 })
