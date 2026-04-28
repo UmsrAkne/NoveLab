@@ -52,6 +52,11 @@ namespace Audio
 
             if (order.AudioType == AudioType.Bgv)
             {
+                // Voice と Bgv が同時再生されるケースがある。
+                // ボイスの再生フラグが立つ前に Bgv の再生が始まっている可能性がある
+                // 暫定的な対策として僅かに待機することでフラグが立つまで時間を稼ぎ、解消するか様子を見る。
+                await UniTask.DelayFrame(4);
+
                 var clips = order.FileNames
                     .Select(n => ScenarioContext.Bgvs.GetValueOrDefault(n))
                     .ToList();
