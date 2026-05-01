@@ -14,6 +14,7 @@ using UI.TypeWriter;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utils;
+using AudioType = ScenarioModel.AudioType;
 
 namespace Scenes.Scenario
 {
@@ -55,6 +56,9 @@ namespace Scenes.Scenario
 
         [SerializeField]
         private RectTransform rightFrame;
+
+        [SerializeField]
+        private SimpleAudioPlayer simpleAudioPlayer;
 
         private void Start()
         {
@@ -133,7 +137,12 @@ namespace Scenes.Scenario
 
             foreach (var audioOrder in audioOrders)
             {
-                audioManager.PlayAsync(audioOrder).Forget();
+                // audioManager.PlayAsync(audioOrder).Forget();
+                if (audioOrder.AudioType == AudioType.Voice)
+                {
+                    var clip = scenarioContext.Voices.GetValueOrDefault(audioOrder.FileName);
+                    simpleAudioPlayer.Play(audioOrder.ChannelIndex, clip, audioOrder.Volume, audioOrder.Pan);
+                }
             }
         }
 
