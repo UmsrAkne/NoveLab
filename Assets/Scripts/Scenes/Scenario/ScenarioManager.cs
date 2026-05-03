@@ -60,6 +60,9 @@ namespace Scenes.Scenario
         [SerializeField]
         private SimpleAudioPlayer simpleAudioPlayer;
 
+        [SerializeField]
+        private List<BgvPlayerV2> bgvPlayerV2List;
+
         private void Start()
         {
             scenarioContext = LoadingManager.GlobalScenarioContext;
@@ -142,6 +145,18 @@ namespace Scenes.Scenario
                 {
                     var clip = scenarioContext.Voices.GetValueOrDefault(audioOrder.FileName);
                     simpleAudioPlayer.Play(audioOrder.ChannelIndex, clip, audioOrder.Volume, audioOrder.Pan);
+                }
+            }
+
+            foreach (var audioOrder in audioOrders)
+            {
+                if (audioOrder.AudioType == AudioType.Bgv)
+                {
+                    var clips = audioOrder.FileNames
+                        .Select(n => scenarioContext.Bgvs.GetValueOrDefault(n))
+                        .ToArray();
+
+                    bgvPlayerV2List[audioOrder.ChannelIndex].Play(clips, audioOrder.Volume, audioOrder.Pan);
                 }
             }
         }
