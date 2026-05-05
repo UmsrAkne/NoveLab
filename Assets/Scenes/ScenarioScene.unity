@@ -1239,6 +1239,7 @@ MonoBehaviour:
   - {fileID: 1826980923}
   - {fileID: 154578071}
   bgmPlayerV2: {fileID: 1494568967}
+  sePlayer: {fileID: 1915939884}
 --- !u!114 &967734380
 MonoBehaviour:
   m_ObjectHideFlags: 0

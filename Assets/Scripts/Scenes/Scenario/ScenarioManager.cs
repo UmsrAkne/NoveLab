@@ -66,6 +66,9 @@ namespace Scenes.Scenario
         [SerializeField]
         private BgmPlayerV2 bgmPlayerV2;
 
+        [SerializeField]
+        private SePlayer sePlayer;
+
         private void Start()
         {
             scenarioContext = LoadingManager.GlobalScenarioContext;
@@ -143,6 +146,15 @@ namespace Scenes.Scenario
                 var bgmOrder = scenarioEntry.BgmOrder;
                 var bgmClip = scenarioContext.BGMs.GetValueOrDefault(bgmOrder.FileName);
                 bgmPlayerV2.PlayBgm(bgmClip, bgmOrder);
+            }
+
+            foreach (var audioOrder in audioOrders)
+            {
+                if (audioOrder.AudioType == AudioType.Se)
+                {
+                    var clip = scenarioContext.Ses.GetValueOrDefault(audioOrder.FileName);
+                    sePlayer.PlaySe(clip,audioOrder);
+                }
             }
 
             foreach (var audioOrder in audioOrders)
