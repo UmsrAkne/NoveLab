@@ -63,6 +63,9 @@ namespace Scenes.Scenario
         [SerializeField]
         private List<BgvPlayerV2> bgvPlayerV2List;
 
+        [SerializeField]
+        private BgmPlayerV2 bgmPlayerV2;
+
         private void Start()
         {
             scenarioContext = LoadingManager.GlobalScenarioContext;
@@ -74,7 +77,9 @@ namespace Scenes.Scenario
             audioManager.ScenarioContext = scenarioContext;
             audioManager.LogDumper = logDumper;
 
-            audioManager.PlayAsync(scenarioContext.SceneSetting.BgmOrder).Forget();
+            var bgmOrder = scenarioContext.SceneSetting.BgmOrder;
+            var bgmClip = scenarioContext.BGMs.GetValueOrDefault(bgmOrder.FileName);
+            bgmPlayerV2.PlayBgm(bgmClip, bgmOrder);
 
             logDumper.Log($"Loaded from: {scenarioContext.ScenarioDirectoryPath}");
 
@@ -135,7 +140,9 @@ namespace Scenes.Scenario
 
             if (scenarioEntry.BgmOrder != null)
             {
-                audioOrders.Add(scenarioEntry.BgmOrder);
+                var bgmOrder = scenarioEntry.BgmOrder;
+                var bgmClip = scenarioContext.BGMs.GetValueOrDefault(bgmOrder.FileName);
+                bgmPlayerV2.PlayBgm(bgmClip, bgmOrder);
             }
 
             foreach (var audioOrder in audioOrders)
