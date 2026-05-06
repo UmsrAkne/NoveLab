@@ -11,7 +11,6 @@ namespace Audio
     {
         [SerializeField] private SimpleAudioPlayer linkedPlayer;
         [SerializeField] private int targetChannelIndex;
-        [SerializeField] private float fadeDuration = 1.0f;
 
         private AudioSource bgvSource;
         private List<AudioClip> playlist = new ();
@@ -117,8 +116,10 @@ namespace Audio
                 return;
             }
 
-            // 親が鳴り出したら即座にミュート
-            StartFade(bgvSource.volume, 0f);
+            // 親の再生開始に伴い、最短時間（0.1s）でフェードアウト。
+            // 直接 volume = 0 を代入せず StartFade を経由させる。
+            // これによってフェード用コルーチンの停止制御や内部状態の整合性を担保している。
+            StartFade(bgvSource.volume, 0f, 0.1f);
         }
 
         private void OnParentFinished(int index)
@@ -134,17 +135,17 @@ namespace Audio
 
         // --- フェード制御 ---
 
-        private void StartFade(float from, float to)
+        private void StartFade(float from, float to, float fadeDuration = 1.0f)
         {
             if (fadeCoroutine != null)
             {
                 StopCoroutine(fadeCoroutine);
             }
 
-            fadeCoroutine = StartCoroutine(FadeRoutine(from, to));
+            fadeCoroutine = StartCoroutine(FadeRoutine(from, to, fadeDuration));
         }
 
-        private IEnumerator FadeRoutine(float from, float to)
+        private IEnumerator FadeRoutine(float from, float to, float fadeDuration = 1.0f)
         {
             float elapsed = 0;
             bgvSource.volume = from;
