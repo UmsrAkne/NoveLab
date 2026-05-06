@@ -14,6 +14,7 @@ using UI.TypeWriter;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utils;
+using AudioType = ScenarioModel.AudioType;
 
 namespace Scenes.Scenario
 {
@@ -56,6 +57,18 @@ namespace Scenes.Scenario
         [SerializeField]
         private RectTransform rightFrame;
 
+        [SerializeField]
+        private SimpleAudioPlayer simpleAudioPlayer;
+
+        [SerializeField]
+        private List<BgvPlayerV2> bgvPlayerV2List;
+
+        [SerializeField]
+        private BgmPlayerV2 bgmPlayerV2;
+
+        [SerializeField]
+        private SePlayer sePlayer;
+
         private void Start()
         {
             scenarioContext = LoadingManager.GlobalScenarioContext;
@@ -67,7 +80,9 @@ namespace Scenes.Scenario
             audioManager.ScenarioContext = scenarioContext;
             audioManager.LogDumper = logDumper;
 
-            audioManager.PlayAsync(scenarioContext.SceneSetting.BgmOrder).Forget();
+            var bgmOrder = scenarioContext.SceneSetting.BgmOrder;
+            var bgmClip = scenarioContext.BGMs.GetValueOrDefault(bgmOrder.FileName);
+            bgmPlayerV2.PlayBgm(bgmClip, bgmOrder);
 
             logDumper.Log($"Loaded from: {scenarioContext.ScenarioDirectoryPath}");
 
@@ -128,12 +143,44 @@ namespace Scenes.Scenario
 
             if (scenarioEntry.BgmOrder != null)
             {
-                audioOrders.Add(scenarioEntry.BgmOrder);
+                var bgmOrder = scenarioEntry.BgmOrder;
+                var bgmClip = scenarioContext.BGMs.GetValueOrDefault(bgmOrder.FileName);
+                bgmPlayerV2.PlayBgm(bgmClip, bgmOrder);
             }
 
             foreach (var audioOrder in audioOrders)
             {
-                audioManager.PlayAsync(audioOrder).Forget();
+                if (audioOrder.AudioType == AudioType.Se)
+                {
+                    var clip = scenarioContext.Ses.GetValueOrDefault(audioOrder.FileName);
+                    sePlayer.PlaySe(clip,audioOrder);
+                }
+            }
+
+            foreach (var audioOrder in audioOrders)
+            {
+                // audioManager.PlayAsync(audioOrder).Forget();
+                if (audioOrder.AudioType == AudioType.Voice)
+                {
+                    var clip = scenarioContext.Voices.GetValueOrDefault(audioOrder.FileName);
+
+                    // Voice の再生開始イベントが Play() 呼び出し直後に飛ぶ。
+                    // それをキャッチして BgvPlayer が再生を止めるまでの僅かな間、２つのプレイヤーの音声が重なってしまうことある。
+                    // これを防止するため、Voice の再生に僅かな遅延を入れている。
+                    simpleAudioPlayer.Play(audioOrder.ChannelIndex, clip, audioOrder.Volume, audioOrder.Pan, 200);
+                }
+            }
+
+            foreach (var audioOrder in audioOrders)
+            {
+                if (audioOrder.AudioType == AudioType.Bgv)
+                {
+                    var clips = audioOrder.FileNames
+                        .Select(n => scenarioContext.Bgvs.GetValueOrDefault(n))
+                        .ToArray();
+
+                    bgvPlayerV2List[audioOrder.ChannelIndex].Play(clips, audioOrder.Volume, audioOrder.Pan);
+                }
             }
         }
 
