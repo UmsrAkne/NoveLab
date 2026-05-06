@@ -163,7 +163,11 @@ namespace Scenes.Scenario
                 if (audioOrder.AudioType == AudioType.Voice)
                 {
                     var clip = scenarioContext.Voices.GetValueOrDefault(audioOrder.FileName);
-                    simpleAudioPlayer.Play(audioOrder.ChannelIndex, clip, audioOrder.Volume, audioOrder.Pan);
+
+                    // Voice の再生開始イベントが Play() 呼び出し直後に飛ぶ。
+                    // それをキャッチして BgvPlayer が再生を止めるまでの僅かな間、２つのプレイヤーの音声が重なってしまうことある。
+                    // これを防止するため、Voice の再生に僅かな遅延を入れている。
+                    simpleAudioPlayer.Play(audioOrder.ChannelIndex, clip, audioOrder.Volume, audioOrder.Pan, 200);
                 }
             }
 

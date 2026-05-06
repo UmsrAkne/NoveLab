@@ -25,7 +25,7 @@ namespace Audio
             Source = source;
         }
 
-        public void Play(AudioClip clip, float volume, float pan)
+        public void Play(AudioClip clip, float volume, float pan, int delayMs = 0)
         {
             if (clip == null)
             {
@@ -42,7 +42,15 @@ namespace Audio
             Source.clip = clip;
             Source.volume = volume;
             Source.panStereo = pan;
-            Source.Play();
+
+            if (delayMs == 0)
+            {
+                Source.Play();
+            }
+            else
+            {
+                Source.PlayDelayed(delayMs / 1000f);
+            }
 
             // 論理フラグを即座に立て、イベントを即時実行
             IsPlayingInternal = true;

@@ -39,11 +39,11 @@ namespace Audio
         /// <summary>
         /// 音声を再生します。Play()を呼んだ直後から IsPlaying は true を返します。
         /// </summary>
-        public void Play(int index, AudioClip clip, float vol = 1f, float pan = 0f)
+        public void Play(int index, AudioClip clip, float vol = 1f, float pan = 0f, int delayMs = 0)
         {
             if (IsValidIndex(index))
             {
-                channels[index].Play(clip, vol, pan);
+                channels[index].Play(clip, vol, pan, delayMs);
             }
         }
 
