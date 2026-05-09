@@ -39,6 +39,8 @@ namespace Scenes.Selection
         private int selectedIndex;
         private readonly List<string> imagePaths = new ();
 
+        private string SelectionIndexFilePath => Path.Combine(Path.GetDirectoryName(Application.dataPath) ?? string.Empty, "selection_index.txt");
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
         {
@@ -60,6 +62,7 @@ namespace Scenes.Selection
             }
             else if (Input.GetKeyDown(KeyCode.Return))
             {
+                SaveSelectedIndex();
                 HandleEnterPressed().Forget();
             }
         }
@@ -87,7 +90,39 @@ namespace Scenes.Selection
                 AddImage(texture, 160);
             }
 
-            imageSelector.DisplayImages.First()?.SetAlpha(1);
+            imageSelector.Select(LoadSelectedIndex());
+            SetBackground();
+        }
+
+        private void SaveSelectedIndex()
+        {
+            try
+            {
+                File.WriteAllText(SelectionIndexFilePath, imageSelector.SelectedIndex.ToString());
+            }
+            catch (IOException e)
+            {
+                Debug.LogError($"Failed to save selection index: {e.Message}");
+            }
+        }
+
+        private int LoadSelectedIndex()
+        {
+            if (File.Exists(SelectionIndexFilePath))
+            {
+                try
+                {
+                    if (int.TryParse(File.ReadAllText(SelectionIndexFilePath), out var index))
+                    {
+                        return index;
+                    }
+                }
+                catch (IOException e)
+                {
+                    Debug.LogError($"Failed to load selection index: {e.Message}");
+                }
+            }
+            return 0;
         }
 
         private async UniTaskVoid HandleEnterPressed()
@@ -95,6 +130,7 @@ namespace Scenes.Selection
             var index = imageSelector.SelectedIndex;
             if (index >= 0)
             {
+                SaveSelectedIndex();
                 var path = Directory.GetParent(Directory.GetParent(imagePaths[index])!.FullName);
                 LoadingManager.GlobalScenarioContext.ScenarioDirectoryPath = path?.FullName;
 
