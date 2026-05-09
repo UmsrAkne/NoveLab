@@ -70,7 +70,7 @@ namespace UI.Controllers
             scrollRect.horizontalNormalizedPosition = targetX;
         }
 
-        private void Select(int index)
+        public void Select(int index)
         {
             if (index < 0 || index >= DisplayImages.Count)
             {
@@ -95,6 +95,7 @@ namespace UI.Controllers
             }
 
             SelectedIndex = index;
+            ScrollToSelected(index);
         }
     }
 }
