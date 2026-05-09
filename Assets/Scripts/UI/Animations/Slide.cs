@@ -40,7 +40,7 @@ namespace UI.Animations
 
         public void Start()
         {
-            image = container?.GetFront();
+            image = container?.GetFront() ?? image;
 
             Stop(); // 前回のキャンセル
             cts = new CancellationTokenSource();
