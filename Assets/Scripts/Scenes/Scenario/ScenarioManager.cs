@@ -43,9 +43,6 @@ namespace Scenes.Scenario
         private TextMeshProUGUI textMeshPro;
 
         [SerializeField]
-        private AudioManager audioManager;
-
-        [SerializeField]
         private AudioLoader audioLoader;
 
         [SerializeField]
@@ -76,9 +73,6 @@ namespace Scenes.Scenario
             imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images, textureMerger);
             animationCompiler =
                 new AnimationCompiler(imageStackers.First(), imageSetFactory);
-
-            audioManager.ScenarioContext = scenarioContext;
-            audioManager.LogDumper = logDumper;
 
             var bgmOrder = scenarioContext.SceneSetting.BgmOrder;
             var bgmClip = scenarioContext.BGMs.GetValueOrDefault(bgmOrder.FileName);
