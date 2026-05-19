@@ -14,6 +14,20 @@ namespace ScenarioModel
 
         public List<string> ResourceFileNames => GetResourceFileNames(this);
 
+        /// <summary>
+        /// 属性から TargetLayerIndex を安全に取得します。
+        /// 設定されていない、または不正な値の場合はデフォルト値(0)を返します。
+        /// </summary>
+        public int GetTargetLayerIndex(int defaultValue = 0)
+        {
+            if (Attrs.TryGetValue("TargetLayerIndex", out var valueStr) &&
+                int.TryParse(valueStr, out var index))
+            {
+                return index;
+            }
+            return defaultValue;
+        }
+
         private static List<string> GetResourceFileNames(AnimationSpec spec)
         {
             var attrs = new List<string>();
