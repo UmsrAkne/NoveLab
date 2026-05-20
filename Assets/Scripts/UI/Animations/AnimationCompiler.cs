@@ -11,22 +11,25 @@ namespace UI.Animations
     public class AnimationCompiler
     {
         // name -> 生成関数（依存を渡して new）
-        private readonly Dictionary<string, Func<IUIAnimation>> factories;
+        private readonly Dictionary<string, Func<IImageContainer, IUIAnimation>> factories;
 
-        public AnimationCompiler(IImageContainer imageContainer, IImageSetFactory imageSetFactory = null)
+        public AnimationCompiler(IImageSetFactory imageSetFactory = null)
         {
-            factories = new Dictionary<string, Func<IUIAnimation>>(StringComparer.OrdinalIgnoreCase)
+            factories = new Dictionary<string, Func<IImageContainer, IUIAnimation>>(StringComparer.OrdinalIgnoreCase)
             {
-                ["slide"] = () => new Slide(imageContainer.GetFront(), imageContainer),
-                ["shake"] = () => new Shake(imageContainer.GetFront(), imageContainer),
-                ["scaleChange"] = () => new ScaleChange(imageContainer.GetFront(), imageContainer),
-                ["image"] = () => new ImageAddAnimation(imageContainer, imageSetFactory),
-                ["draw"] = () => new ReplaceExpression(imageContainer, imageSetFactory),
-                ["flash"] = () => new Flash(imageContainer),
-                ["wait"] = () => new WaitAnimation(),
-                ["chain"] = () => new AnimationChain(),
+                // 引数の container を使って new する。 .GetFront() も不要に！
+                ["slide"]        = (container) => new Slide(null, container),
+                ["shake"]        = (container) => new Shake(null, container),
+                ["scaleChange"]  = (container) => new ScaleChange(null ,container),
+                ["image"]        = (container) => new ImageAddAnimation(container, imageSetFactory),
+                ["draw"]         = (container) => new ReplaceExpression(container, imageSetFactory),
+                ["flash"]        = (container) => new Flash(container),
+                ["wait"]         = (container) => new WaitAnimation(), // コンテナ不要なものは無視
+                ["chain"]        = (container) => new AnimationChain(),
             };
         }
+
+        public List<IImageContainer> ImageContainers { get; set; }
 
         public IEnumerable<IUIAnimation> CompileMany(IEnumerable<AnimationSpec> specs)
         {
@@ -40,7 +43,8 @@ namespace UI.Animations
                 throw new InvalidOperationException($"未対応アニメ: {spec.Name}");
             }
 
-            var instance = factory();
+            var c = ImageContainers[spec.GetTargetLayerIndex()];
+            var instance = factory(c);
 
             if (instance is AnimationChain chain)
             {

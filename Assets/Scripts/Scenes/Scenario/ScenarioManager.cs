@@ -43,9 +43,6 @@ namespace Scenes.Scenario
         private TextMeshProUGUI textMeshPro;
 
         [SerializeField]
-        private AudioManager audioManager;
-
-        [SerializeField]
         private AudioLoader audioLoader;
 
         [SerializeField]
@@ -75,10 +72,8 @@ namespace Scenes.Scenario
             SetVisibleWidth(scenarioContext.SceneSetting.WindowWidth);
             imageSetFactory = new ImageSetFactory(imageSetPrefab, scenarioContext.Images, textureMerger);
             animationCompiler =
-                new AnimationCompiler(imageStackers.First(), imageSetFactory);
-
-            audioManager.ScenarioContext = scenarioContext;
-            audioManager.LogDumper = logDumper;
+                new AnimationCompiler(imageSetFactory)
+                    { ImageContainers = imageStackers.Cast<IImageContainer>().ToList(), };
 
             var bgmOrder = scenarioContext.SceneSetting.BgmOrder;
             var bgmClip = scenarioContext.BGMs.GetValueOrDefault(bgmOrder.FileName);
